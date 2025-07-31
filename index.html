@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPrA QuantumInsights - Quantum Computing Education</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --fresh-green: #4ade80;
+            --white: #ffffff;
+            --light-grey: #f3f4f6;
+            --blue: #3b82f6;
+            --light-gold: #fbbf24;
+            --dark-text: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-grey) 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--fresh-green) 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--white);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--light-gold), var(--white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo-icon {
+            height: 32px;
+            width: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .logo-title {
+            font-size: 1.8rem;
+        }
+
+        .logo-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: normal;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--light-grey) 0%, var(--white) 50%, var(--light-grey) 100%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--blue), var(--fresh-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: var(--dark-text);
+            opacity: 0.8;
+        }
+
+        /* Main Sections */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .sections-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .section-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--fresh-green), var(--blue));
+        }
+
+        .section-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: var(--fresh-green);
+        }
+
+        .section-card h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-card p {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .section-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--blue), var(--fresh-green));
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .section-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Icons */
+        .icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--light-gold), var(--fresh-green));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-text);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cpra-logo-small {
+            height: 25px;
+            width: auto;
+            border-radius: 4px;
+            opacity: 0.9;
+        }
+
+        .by-text {
+            color: var(--white);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .sections-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .section-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="favicon.svg" alt="Quantum Insights Logo" class="nav-logo-icon">
+                <div class="logo-text">
+                    <span class="logo-title">QuantumInsights</span>
+                    <span class="logo-subtitle">By CPrA</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="concepts.html">QC Concepts</a></li>
+                <li><a href="research.html">Research & Code</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <h1>Welcome to CPrA QuantumInsights</h1>
+        <p>Your gateway to understanding quantum computing through comprehensive education and cutting-edge research. Explore fundamental concepts and dive into the latest developments in quantum technology.</p>
+    </section>
+
+    <main class="main-content">
+        <div class="sections-grid">
+            <div class="section-card">
+                <h2><span class="icon">📚</span>Quantum Computing Concepts</h2>
+                <p>Discover the fascinating world of quantum computing through interactive lessons, detailed explanations, and visual demonstrations. From basic principles to advanced algorithms, master the fundamentals step by step.</p>
+                <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                    <li>Quantum Mechanics Basics</li>
+                    <li>Qubits and Superposition</li>
+                    <li>Quantum Gates and Circuits</li>
+                    <li>Quantum Algorithms</li>
+                    <li>Error Correction</li>
+                </ul>
+                <a href="concepts.html" class="section-btn">Explore Concepts</a>
+            </div>
+
+            <div class="section-card">
+                <h2><span class="icon">🔬</span>Research & Code Implementation</h2>
+                <p>Access implementations of quantum algorithms, review published papers, and explore practical applications. Bridge the gap between theory and practice with real-world quantum programming examples.</p>
+                <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                    <li>Published Papers Analysis</li>
+                    <li>Algorithm Implementations</li>
+                    <li>Quantum Programming</li>
+                    <li>Performance Benchmarks</li>
+                    <li>Open Source Projects</li>
+                </ul>
+                <a href="research.html" class="section-btn">View Research</a>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem; padding: 2rem; background: var(--white); border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.1);">
+            <h2 style="color: var(--blue); margin-bottom: 1rem;">Start Your Quantum Journey</h2>
+            <p style="margin-bottom: 2rem; opacity: 0.8;">Whether you're a beginner curious about quantum phenomena or a researcher looking for implementation details, CPrA QuantumInsights provides the resources you need to advance your understanding.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="concepts.html" class="section-btn">Begin Learning</a>
+                <a href="research.html" class="section-btn" style="background: linear-gradient(135deg, var(--light-gold), var(--fresh-green));">Explore Research</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 CPrA QuantumInsights. Advancing quantum education and research.</p>
+            <span class="by-text">by</span>
+            <img src="favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
+        </div>
+    </footer>
+</body>
+</html>

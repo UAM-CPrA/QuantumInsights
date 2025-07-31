@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[RESEARCH PAPER TITLE] - CPrA QuantumInsights</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <style>
+        :root {
+            --fresh-green: #4ade80;
+            --white: #ffffff;
+            --light-grey: #f3f4f6;
+            --blue: #3b82f6;
+            --light-gold: #fbbf24;
+            --dark-text: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-grey) 100%);
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--fresh-green) 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--white);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--light-gold), var(--white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo-icon {
+            height: 32px;
+            width: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .logo-title {
+            font-size: 1.8rem;
+        }
+
+        .logo-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: normal;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Article Layout */
+        .article-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            background: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .breadcrumb a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            color: var(--light-grey);
+        }
+
+        /* Paper Header */
+        .paper-header {
+            background: var(--white);
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--light-gold);
+        }
+
+        .paper-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--blue), var(--light-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .paper-authors {
+            font-size: 1.2rem;
+            color: var(--dark-text);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .paper-venue {
+            background: var(--fresh-green);
+            color: var(--white);
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .paper-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: var(--dark-text);
+            opacity: 0.7;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Abstract Section */
+        .abstract {
+            background: linear-gradient(135deg, var(--light-grey), var(--white));
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--blue);
+        }
+
+        .abstract h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--white);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .content-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--blue);
+        }
+
+        .section-icon {
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, var(--light-gold), var(--blue));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        /* Code Implementation Sections */
+        .code-section {
+            background: var(--dark-text);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .code-language {
+            background: var(--fresh-green);
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .code-block {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 3px solid var(--light-gold);
+        }
+
+        /* Results and Figures */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, var(--light-grey), var(--white));
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--light-gold);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-card h4 {
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Figure placeholder */
+        .figure-placeholder {
+            background: var(--light-grey);
+            border: 2px dashed var(--blue);
+            padding: 3rem;
+            text-align: center;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .figure-caption {
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--dark-text);
+            opacity: 0.7;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        /* Performance Metrics */
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .metrics-table th {
+            background: var(--blue);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .metrics-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-grey);
+        }
+
+        .metrics-table tr:hover {
+            background: var(--light-grey);
+        }
+
+        /* Info Boxes */
+        .info-box {
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .info-box.insight {
+            background: rgba(74, 222, 128, 0.1);
+            border-left-color: var(--fresh-green);
+        }
+
+        .info-box.challenge {
+            background: rgba(251, 191, 36, 0.1);
+            border-left-color: var(--light-gold);
+        }
+
+        .info-box.future {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: var(--blue);
+        }
+
+        .info-box-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* GitHub and External Links */
+        .github-link {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--light-gold), var(--fresh-green));
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .github-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .external-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        .external-link {
+            background: var(--white);
+            color: var(--blue);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            border: 2px solid var(--blue);
+            transition: all 0.3s ease;
+        }
+
+        .external-link:hover {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        /* Citation Box */
+        .citation-box {
+            background: var(--light-grey);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--fresh-green);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 2rem 0;
+        }
+
+        .citation-box h4 {
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Navigation between papers */
+        .paper-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--dark-text);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .nav-link.prev::before {
+            content: "← ";
+        }
+
+        .nav-link.next::after {
+            content: " →";
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .article-container {
+                padding: 0 1rem;
+            }
+
+            .paper-title {
+                font-size: 2rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .paper-navigation {
+                flex-direction: column;
+            }
+
+            .external-links {
+                justify-content: center;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-text);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cpra-logo-small {
+            height: 25px;
+            width: auto;
+            border-radius: 4px;
+            opacity: 0.9;
+        }
+
+        .by-text {
+            color: var(--white);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <img src="../favicon.svg" alt="CPrA Logo" class="nav-logo-icon">
+                <div class="logo-text">
+                    <span class="logo-title">Quantum Insights</span>
+                    <span class="logo-subtitle">By CPrA</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../concepts.html">QC Concepts</a></li>
+                <li><a href="../research.html">Research & Code</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb">
+            <a href="../research.html">Research</a>
+            <span class="breadcrumb-separator">></span>
+            <a href="../research.html#section-name">[Research Category]</a>
+            <span class="breadcrumb-separator">></span>
+            <span>[Paper Title]</span>
+        </nav>
+
+        <!-- Paper Header -->
+        <header class="paper-header">
+            <h1 class="paper-title">[Your Research Paper Title Here]</h1>
+            <div class="paper-authors">[Author Names, Affiliations]</div>
+            <div class="paper-venue">[Conference/Journal Name Year]</div>
+            <div class="paper-meta">
+                <div class="meta-item">
+                    <span>📅</span>
+                    <span>Published: [Date]</span>
+                </div>
+                <div class="meta-item">
+                    <span>🏷️</span>
+                    <span>Category: [Algorithm/Hardware/Theory]</span>
+                </div>
+                <div class="meta-item">
+                    <span>⏱️</span>
+                    <span>Reading time: [X] min</span>
+                </div>
+                <div class="meta-item">
+                    <span>💾</span>
+                    <span>Implementation: [Framework Used]</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Abstract -->
+        <section class="abstract">
+            <h3>📄 Abstract</h3>
+            <p>
+                [Provide the paper's abstract here. This should be a concise summary of the research problem, 
+                methodology, key findings, and implications. Keep it comprehensive but accessible to quantum 
+                computing enthusiasts of different levels.]
+            </p>
+        </section>
+
+        <!-- Main Content Sections -->
+        <main>
+            <!-- Problem Statement -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🎯</span>
+                    <h2 class="section-title">Problem Statement</h2>
+                </div>
+                <p>Clearly define the research problem this paper addresses:</p>
+                
+                <div class="info-box challenge">
+                    <div class="info-box-title">🎯 Research Challenge</div>
+                    <p>Highlight the main challenge or gap in knowledge that this research addresses.</p>
+                </div>
+                
+                <ul>
+                    <li><strong>Current limitations:</strong> Describe existing limitations</li>
+                    <li><strong>Research gap:</strong> What wasn't solved before</li>
+                    <li><strong>Importance:</strong> Why this problem matters for quantum computing</li>
+                </ul>
+            </section>
+
+            <!-- Methodology -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🔬</span>
+                    <h2 class="section-title">Methodology & Approach</h2>
+                </div>
+                <p>Explain the research methodology and technical approach:</p>
+                
+                <h4>Theoretical Framework</h4>
+                <p>Describe the theoretical foundations and mathematical framework used.</p>
+                
+                <h4>Experimental Design</h4>
+                <p>Outline the experimental setup, quantum circuits, or simulation parameters.</p>
+                
+                <div class="figure-placeholder">
+                    <p>📊 Figure: Experimental Setup Diagram</p>
+                    <p>Include diagrams of quantum circuits, experimental arrangements, or algorithm flowcharts</p>
+                </div>
+                <div class="figure-caption">Figure 1: [Description of the figure above]</div>
+            </section>
+
+            <!-- Implementation -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">💻</span>
+                    <h2 class="section-title">Implementation Details</h2>
+                </div>
+                <p>Provide detailed implementation information with code examples:</p>
+                
+                <div class="code-section">
+                    <div class="code-header">
+                        <span>Main Algorithm Implementation</span>
+                        <span class="code-language">Qiskit</span>
+                    </div>
+                    <div class="code-block">
+                        <pre><code># Main algorithm implementation
+import qiskit
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
+from qiskit.algorithms import VQE
+from qiskit.algorithms.optimizers import COBYLA
+
+def create_quantum_algorithm():
+    """
+    Implement the main quantum algorithm from the paper
+    """
+    # Define quantum registers
+    qreg = QuantumRegister(4, 'q')
+    creg = ClassicalRegister(4, 'c')
+    circuit = QuantumCircuit(qreg, creg)
+    
+    # Algorithm implementation
+    # Step 1: Initialize qubits
+    circuit.h(qreg[0])  # Create superposition
+    
+    # Step 2: Apply quantum operations
+    for i in range(len(qreg)-1):
+        circuit.cx(qreg[i], qreg[i+1])  # Entangle qubits
+    
+    # Step 3: Measurement
+    circuit.measure(qreg, creg)
+    
+    return circuit
+
+# Example usage
+algorithm_circuit = create_quantum_algorithm()
+print("Quantum circuit created successfully!")
+print(algorithm_circuit.draw())</code></pre>
+                    </div>
+                </div>
+                
+                <div class="external-links">
+                    <a href="#" class="github-link">🔗 View Complete Implementation on GitHub</a>
+                    <a href="#" class="external-link">📦 Download Code Package</a>
+                    <a href="#" class="external-link">📊 View on Quantum Computing Platform</a>
+                </div>
+            </section>
+
+            <!-- Results & Analysis -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">📊</span>
+                    <h2 class="section-title">Results & Performance Analysis</h2>
+                </div>
+                <p>Present the key findings and performance metrics:</p>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h4>Quantum Advantage</h4>
+                        <p>Demonstrate the quantum speedup achieved compared to classical algorithms.</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>Accuracy Metrics</h4>
+                        <p>Report on the accuracy and fidelity of the quantum algorithm implementation.</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>Scalability Analysis</h4>
+                        <p>Analyze how the algorithm performs as the problem size increases.</p>
+                    </div>
+                    <div class="result-card">
+                        <h4>Noise Resilience</h4>
+                        <p>Evaluate performance under realistic noise conditions on quantum devices.</p>
+                    </div>
+                </div>
+                
+                <h4>Performance Comparison</h4>
+                <table class="metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Time Complexity</th>
+                            <th>Success Rate</th>
+                            <th>Quantum Volume</th>
+                            <th>Gate Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Proposed Method</td>
+                            <td>O(√N)</td>
+                            <td>95.2%</td>
+                            <td>32</td>
+                            <td>145</td>
+                        </tr>
+                        <tr>
+                            <td>Classical Baseline</td>
+                            <td>O(N)</td>
+                            <td>100%</td>
+                            <td>N/A</td>
+                            <td>N/A</td>
+                        </tr>
+                        <tr>
+                            <td>Previous Quantum</td>
+                            <td>O(√N log N)</td>
+                            <td>87.5%</td>
+                            <td>16</td>
+                            <td>203</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="figure-placeholder">
+                    <p>📈 Figure: Performance Comparison Charts</p>
+                    <p>Include bar charts, line graphs, or other visualizations of results</p>
+                </div>
+                <div class="figure-caption">Figure 2: Performance comparison showing quantum advantage</div>
+            </section>
+
+            <!-- Code Variations -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🔧</span>
+                    <h2 class="section-title">Alternative Implementations</h2>
+                </div>
+                <p>Show different framework implementations or algorithm variations:</p>
+                
+                <div class="code-section">
+                    <div class="code-header">
+                        <span>PennyLane Implementation</span>
+                        <span class="code-language">PennyLane</span>
+                    </div>
+                    <div class="code-block">
+                        <pre><code># Alternative implementation using PennyLane
+import pennylane as qml
+from pennylane import numpy as np
+
+# Define quantum device
+dev = qml.device('default.qubit', wires=4)
+
+@qml.qnode(dev)
+def quantum_algorithm(params):
+    """
+    PennyLane version of the quantum algorithm
+    """
+    # Initialize qubits
+    qml.Hadamard(wires=0)
+    
+    # Apply parameterized gates
+    for i, param in enumerate(params):
+        qml.RY(param, wires=i)
+    
+    # Entangling layer
+    for i in range(3):
+        qml.CNOT(wires=[i, i+1])
+    
+    return qml.probs(wires=range(4))
+
+# Example usage
+params = np.random.random(4)
+result = quantum_algorithm(params)
+print(f"Quantum probabilities: {result}")</code></pre>
+                    </div>
+                </div>
+                
+                <div class="info-box insight">
+                    <div class="info-box-title">💡 Implementation Insight</div>
+                    <p>Explain the advantages and trade-offs of different implementation approaches.</p>
+                </div>
+            </section>
+
+            <!-- Discussion & Implications -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">💭</span>
+                    <h2 class="section-title">Discussion & Implications</h2>
+                </div>
+                <p>Discuss the broader implications of the research:</p>
+                
+                <h4>Theoretical Contributions</h4>
+                <ul>
+                    <li>Novel insights into quantum computation theory</li>
+                    <li>Mathematical framework advances</li>
+                    <li>Complexity theory implications</li>
+                </ul>
+                
+                <h4>Practical Applications</h4>
+                <ul>
+                    <li>Real-world problems that can benefit</li>
+                    <li>Industry applications and use cases</li>
+                    <li>Integration with existing quantum systems</li>
+                </ul>
+                
+                <div class="info-box future">
+                    <div class="info-box-title">🔮 Future Directions</div>
+                    <p>Outline potential extensions and future research opportunities based on this work.</p>
+                </div>
+            </section>
+
+            <!-- Limitations & Challenges -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">⚠️</span>
+                    <h2 class="section-title">Limitations & Open Challenges</h2>
+                </div>
+                <p>Honestly discuss the limitations and remaining challenges:</p>
+                
+                <div class="info-box challenge">
+                    <div class="info-box-title">🎯 Current Limitations</div>
+                    <ul>
+                        <li><strong>Hardware constraints:</strong> Requirements for fault-tolerant quantum computers</li>
+                        <li><strong>Scalability issues:</strong> Performance degradation with problem size</li>
+                        <li><strong>Noise sensitivity:</strong> Impact of quantum decoherence</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Citation Information -->
+            <section class="citation-box">
+                <h4>📝 How to Cite This Work</h4>
+                <div>
+                    [Author, A. et al.] ([Year]). [Paper Title]. [Venue], [Volume]([Issue]), [pages]. 
+                    DOI: [doi-link]
+                </div>
+                <br>
+                <div>
+                    <strong>BibTeX:</strong><br>
+                    @article{authoryear,<br>
+                    &nbsp;&nbsp;title={[Paper Title]},<br>
+                    &nbsp;&nbsp;author={[Authors]},<br>
+                    &nbsp;&nbsp;journal={[Journal Name]},<br>
+                    &nbsp;&nbsp;year={[Year]}<br>
+                    }
+                </div>
+            </section>
+        </main>
+
+        <!-- Navigation between papers -->
+        <nav class="paper-navigation">
+            <a href="#" class="nav-link prev">Previous Paper</a>
+            <a href="../research.html" class="nav-link">Back to Research</a>
+            <a href="#" class="nav-link next">Next Paper</a>
+        </nav>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 CPrA QuantumInsights. Advancing quantum education and research.</p>
+            <span class="by-text">by</span>
+            <img src="../favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
+        </div>
+    </footer>
+
+    <script>
+        // Copy citation to clipboard
+        function copyCitation() {
+            const citation = document.querySelector('.citation-box div').textContent;
+            navigator.clipboard.writeText(citation).then(() => {
+                alert('Citation copied to clipboard!');
+            });
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add code copy functionality
+        document.querySelectorAll('.code-block').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.textContent = '📋 Copy';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: var(--fresh-green);
+                color: white;
+                border: none;
+                padding: 0.5rem;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 0.8rem;
+            `;
+            
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+            
+            copyBtn.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    copyBtn.textContent = '✅ Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = '📋 Copy';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

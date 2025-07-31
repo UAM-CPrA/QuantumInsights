@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research & Code Implementation - CPrA QuantumInsights</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --fresh-green: #4ade80;
+            --white: #ffffff;
+            --light-grey: #f3f4f6;
+            --blue: #3b82f6;
+            --light-gold: #fbbf24;
+            --dark-text: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-grey) 100%);
+            min-height: 100vh;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--fresh-green) 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--white);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--light-gold), var(--white));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo-icon {
+            height: 32px;
+            width: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .logo-title {
+            font-size: 1.8rem;
+        }
+
+        .logo-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: normal;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Layout */
+        .main-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Left Sidebar Navigation */
+        .sidebar {
+            width: 320px;
+            background: var(--white);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem 1rem;
+            background: linear-gradient(135deg, var(--light-grey), var(--white));
+            border-bottom: 2px solid var(--light-gold);
+        }
+
+        .sidebar-header h2 {
+            color: var(--blue);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0.8rem 1.5rem;
+            font-weight: bold;
+            color: var(--blue);
+            background: linear-gradient(90deg, var(--light-grey), transparent);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.8rem 2rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--light-grey);
+            border-left-color: var(--light-gold);
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, var(--light-gold), transparent);
+            border-left-color: var(--blue);
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 2rem;
+            max-width: calc(100vw - 320px);
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--light-gold);
+        }
+
+        .content-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--blue), var(--light-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .research-section {
+            background: var(--white);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .research-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .research-section h2 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, var(--light-gold), var(--blue));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+        }
+
+        .paper-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .paper-card {
+            background: linear-gradient(135deg, var(--light-grey), var(--white));
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--light-gold);
+            transition: all 0.3s ease;
+        }
+
+        .paper-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .paper-title {
+            color: var(--blue);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .paper-authors {
+            color: var(--dark-text);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .paper-venue {
+            background: var(--fresh-green);
+            color: var(--white);
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .code-section {
+            background: var(--dark-text);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .code-language {
+            background: var(--fresh-green);
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .github-link {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--light-gold), var(--fresh-green));
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .github-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+            }
+
+            .content {
+                max-width: 100%;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .paper-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-text);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cpra-logo-small {
+            height: 25px;
+            width: auto;
+            border-radius: 4px;
+            opacity: 0.9;
+        }
+
+        .by-text {
+            color: var(--white);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="favicon.svg" alt="CPrA Logo" class="nav-logo-icon">
+                <div class="logo-text">
+                    <span class="logo-title">Quantum Insights</span>
+                    <span class="logo-subtitle">By CPrA</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="concepts.html">QC Concepts</a></li>
+                <li><a href="research.html">Research & Code</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-layout">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🔬 Research Areas</h2>
+                <p>Explore papers, implementations, and code</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <!-- Navigation will be dynamically loaded here -->
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="content-header">
+                <h1>Research & Code Implementation</h1>
+                <p>Explore cutting-edge quantum computing research papers with practical code implementations and performance analysis.</p>
+            </div>
+            <!-- Content will be dynamically loaded here -->
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 CPrA QuantumInsights. Advancing quantum education and research.</p>
+            <span class="by-text">by</span>
+            <img src="favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
+        </div>
+    </footer>
+
+    <script>
+        // Load research data and populate the page
+        async function loadResearchData() {
+            try {
+                const response = await fetch('research/meta.json');
+                const data = await response.json();
+                
+                // Update page title and description
+                document.querySelector('.content-header h1').textContent = data.title;
+                document.querySelector('.content-header p').textContent = data.description;
+                
+                // Clear existing sidebar navigation and content
+                const sidebarNav = document.querySelector('.sidebar-nav');
+                const content = document.querySelector('.content');
+                
+                // Keep the header but remove existing sections
+                const existingSections = content.querySelectorAll('.research-section');
+                existingSections.forEach(section => section.remove());
+                
+                // Generate sidebar navigation
+                generateSidebarNavigation(data.sections, sidebarNav);
+                
+                // Generate main content sections
+                generateMainContent(data.sections, content);
+                
+            } catch (error) {
+                console.error('Error loading research data:', error);
+            }
+        }
+
+        function generateSidebarNavigation(sections, container) {
+            container.innerHTML = '';
+            
+            sections.forEach(section => {
+                const navSection = document.createElement('div');
+                navSection.className = 'nav-section';
+                
+                const sectionTitle = document.createElement('div');
+                sectionTitle.className = 'nav-section-title';
+                sectionTitle.textContent = section.title;
+                navSection.appendChild(sectionTitle);
+                
+                section.items.forEach((item, index) => {
+                    const navItem = document.createElement('a');
+                    navItem.href = `#${item.id}`;
+                    navItem.className = `nav-item ${index === 0 && section.id === 'algorithm-papers' ? 'active' : ''}`;
+                    navItem.textContent = item.title;
+                    navSection.appendChild(navItem);
+                });
+                
+                container.appendChild(navSection);
+            });
+        }
+
+        function generateMainContent(sections, container) {
+            const header = container.querySelector('.content-header');
+            
+            sections.forEach(section => {
+                section.items.forEach(item => {
+                    const researchSection = document.createElement('section');
+                    researchSection.className = 'research-section';
+                    researchSection.id = item.id;
+                    
+                    const sectionHeader = document.createElement('h2');
+                    sectionHeader.innerHTML = `<span class="section-icon">${getIconForSection(section.id)}</span>${item.title}`;
+                    
+                    const description = document.createElement('p');
+                    description.textContent = item.description;
+                    
+                    researchSection.appendChild(sectionHeader);
+                    researchSection.appendChild(description);
+                    
+                    if (item.papers && item.papers.length > 0) {
+                        const paperGrid = document.createElement('div');
+                        paperGrid.className = 'paper-grid';
+                        
+                        item.papers.forEach(paper => {
+                            const paperCard = document.createElement('div');
+                            paperCard.className = 'paper-card';
+                            
+                            const paperTitle = document.createElement('div');
+                            paperTitle.className = 'paper-title';
+                            paperTitle.textContent = paper.title;
+                            
+                            const paperAuthors = document.createElement('div');
+                            paperAuthors.className = 'paper-authors';
+                            paperAuthors.textContent = paper.authors;
+                            
+                            const paperVenue = document.createElement('div');
+                            paperVenue.className = 'paper-venue';
+                            paperVenue.textContent = paper.venue;
+                            
+                            const paperDescription = document.createElement('p');
+                            paperDescription.textContent = paper.description;
+                            
+                            paperCard.appendChild(paperTitle);
+                            paperCard.appendChild(paperAuthors);
+                            paperCard.appendChild(paperVenue);
+                            paperCard.appendChild(paperDescription);
+                            
+                            if (paper.code) {
+                                const codeSection = document.createElement('div');
+                                codeSection.className = 'code-section';
+                                
+                                const codeHeader = document.createElement('div');
+                                codeHeader.className = 'code-header';
+                                
+                                const codeTitle = document.createElement('span');
+                                codeTitle.textContent = paper.code.title;
+                                
+                                const codeLanguage = document.createElement('span');
+                                codeLanguage.className = 'code-language';
+                                codeLanguage.textContent = paper.code.language;
+                                
+                                codeHeader.appendChild(codeTitle);
+                                codeHeader.appendChild(codeLanguage);
+                                
+                                const codeSnippet = document.createElement('pre');
+                                const codeElement = document.createElement('code');
+                                codeElement.textContent = paper.code.snippet;
+                                codeSnippet.appendChild(codeElement);
+                                
+                                codeSection.appendChild(codeHeader);
+                                codeSection.appendChild(codeSnippet);
+                                paperCard.appendChild(codeSection);
+                            }
+                            
+                            if (paper.github_link) {
+                                const githubLink = document.createElement('a');
+                                githubLink.href = paper.github_link;
+                                githubLink.className = 'github-link';
+                                githubLink.textContent = '🔗 View Full Implementation';
+                                paperCard.appendChild(githubLink);
+                            }
+                            
+                            paperGrid.appendChild(paperCard);
+                        });
+                        
+                        researchSection.appendChild(paperGrid);
+                    } else {
+                        // Add placeholder for empty sections
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'paper-grid';
+                        placeholder.innerHTML = '<div class="paper-card"><p style="text-align: center; opacity: 0.6; font-style: italic;">Content coming soon...</p></div>';
+                        researchSection.appendChild(placeholder);
+                    }
+                    
+                    container.appendChild(researchSection);
+                });
+            });
+        }
+
+        function getIconForSection(sectionId) {
+            const icons = {
+                'algorithm-papers': '📚',
+                'code-implementations': '💻',
+                'hardware-research': '🔧',
+                'benchmarks': '📊'
+            };
+            return icons[sectionId] || '🔬';
+        }
+
+        // Add click handlers for navigation
+        function addNavigationHandlers() {
+            document.addEventListener('click', (e) => {
+                if (e.target.matches('.nav-item')) {
+                    // Remove active class from all nav items
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // Add active class to clicked item
+                    e.target.classList.add('active');
+                }
+            });
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadResearchData();
+            addNavigationHandlers();
+        });
+    </script>
+</body>
+</html>

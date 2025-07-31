@@ -1,0 +1,78 @@
+{
+  "title": "Quantum Algorithms",
+  "description": "Core quantum algorithms that demonstrate quantum advantage and practical applications.",
+  "algorithms": [
+    {
+      "id": "deutsch-algorithm",
+      "title": "Deutsch Algorithm",
+      "description": "The Deutsch algorithm demonstrates quantum advantage for determining if a function is constant or balanced.",
+      "complexity": {
+        "classical": "O(2) - requires 2 function evaluations",
+        "quantum": "O(1) - requires only 1 quantum evaluation"
+      },
+      "circuit_depth": 3,
+      "qubits_required": 2,
+      "key_concepts": [
+        "Quantum parallelism",
+        "Oracle construction",
+        "Quantum interference",
+        "Superposition advantage"
+      ],
+      "implementation": {
+        "oracle_types": ["Constant: f(0) = f(1)", "Balanced: f(0) ≠ f(1)"],
+        "measurement_outcomes": {
+          "constant": "Always measure |0⟩",
+          "balanced": "Always measure |1⟩"
+        }
+      }
+    },
+    {
+      "id": "grovers-algorithm",
+      "title": "Grover's Search Algorithm",
+      "description": "Grover's algorithm provides quadratic speedup for searching unsorted databases.",
+      "complexity": {
+        "classical": "O(N) - linear search through N items",
+        "quantum": "O(√N) - quadratic speedup"
+      },
+      "circuit_depth": "O(√N)",
+      "qubits_required": "log₂(N)",
+      "key_concepts": [
+        "Amplitude amplification",
+        "Oracle marking",
+        "Diffusion operator",
+        "Optimal iteration count"
+      ],
+      "implementation": {
+        "optimal_iterations": "π√N/4",
+        "success_probability": "≈ 1 for optimal iterations",
+        "oracle_types": ["Single item", "Multiple items", "Partial search"]
+      }
+    },
+    {
+      "id": "shors-algorithm",
+      "title": "Shor's Factoring Algorithm",
+      "description": "Shor's algorithm efficiently factors large integers, threatening current cryptographic systems.",
+      "complexity": {
+        "classical": "O(exp(n^(1/3))) - exponential in number length",
+        "quantum": "O(n³) - polynomial in number length"
+      },
+      "circuit_depth": "O(n³)",
+      "qubits_required": "2n + 3",
+      "key_concepts": [
+        "Period finding",
+        "Quantum Fourier Transform",
+        "Continued fractions",
+        "Modular exponentiation"
+      ],
+      "implementation": {
+        "steps": [
+          "Classical preprocessing",
+          "Quantum period finding",
+          "QFT measurement",
+          "Classical post-processing"
+        ],
+        "success_probability": "≥ 1/2 per attempt"
+      }
+    }
+  ]
+}

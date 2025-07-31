@@ -1,0 +1,37 @@
+{
+  "title": "Fundamental Concepts",
+  "description": "Core principles of quantum mechanics and quantum information theory.",
+  "concepts": [
+    {
+      "id": "quantum-mechanics-basics",
+      "title": "Quantum Mechanics Basics",
+      "description": "Understanding quantum computing starts with grasping the fundamental principles of quantum mechanics that make quantum computation possible.",
+      "details": {
+        "wave_particle_duality": {
+          "title": "Wave-Particle Duality",
+          "description": "Learn how quantum objects exhibit both wave and particle properties, forming the foundation of quantum behavior.",
+          "mathematical_foundation": "de Broglie wavelength: λ = h/p",
+          "applications": ["Electron diffraction", "Photon behavior", "Matter waves"]
+        },
+        "uncertainty_principle": {
+          "title": "Uncertainty Principle",
+          "description": "Explore Heisenberg's uncertainty principle and its implications for quantum information processing.",
+          "mathematical_foundation": "ΔxΔp ≥ ℏ/2",
+          "applications": ["Measurement limits", "Quantum cryptography", "No-cloning theorem"]
+        },
+        "quantum_states": {
+          "title": "Quantum States",
+          "description": "Understand how quantum systems are described by state vectors in complex vector spaces.",
+          "mathematical_foundation": "|ψ⟩ = α|0⟩ + β|1⟩ where |α|² + |β|² = 1",
+          "applications": ["State preparation", "Quantum algorithms", "Quantum simulation"]
+        },
+        "probability_amplitudes": {
+          "title": "Probability Amplitudes",
+          "description": "Discover how quantum probabilities arise from complex amplitudes and Born's rule.",
+          "mathematical_foundation": "P(outcome) = |⟨outcome|ψ⟩|²",
+          "applications": ["Measurement outcomes", "Quantum interference", "Algorithm design"]
+        }
+      }
+    }
+  ]
+}
