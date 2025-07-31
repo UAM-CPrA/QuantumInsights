@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Generator - CPrA QuantumInsights</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --fresh-green: #4ade80;
+            --white: #ffffff;
+            --light-grey: #f3f4f6;
+            --blue: #3b82f6;
+            --light-gold: #fbbf24;
+            --dark-text: #1f2937;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background: linear-gradient(135deg, var(--white) 0%, var(--light-grey) 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--fresh-green) 100%);
+            color: var(--white);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .template-selector {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .template-selector h2 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .template-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .template-option {
+            border: 2px solid var(--light-grey);
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .template-option:hover {
+            border-color: var(--blue);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+        }
+
+        .template-option.selected {
+            border-color: var(--fresh-green);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .template-option h3 {
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--light-grey);
+            border-radius: 10px;
+            background: var(--light-grey);
+        }
+
+        .form-section h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-grey);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .section-manager {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-manager h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .available-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            border: 2px dashed var(--light-grey);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .section-card:hover {
+            border-color: var(--blue);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .section-card h4 {
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .selected-sections {
+            border: 2px solid var(--fresh-green);
+            padding: 1.5rem;
+            border-radius: 10px;
+            background: rgba(74, 222, 128, 0.05);
+            min-height: 100px;
+        }
+
+        .selected-section-item {
+            background: var(--white);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--light-grey);
+            transition: all 0.3s ease;
+        }
+
+        .selected-section-item.edited {
+            border-left-color: var(--fresh-green);
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        .selected-section-item.edited span {
+            color: var(--fresh-green);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue), var(--fresh-green));
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--light-grey);
+            color: var(--dark-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-gold);
+            color: var(--white);
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .preview-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .preview-container h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-preview {
+            background: var(--dark-text);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .actions .btn {
+            margin: 0 0.5rem;
+        }
+
+        .progress-indicator {
+            background: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--light-grey);
+            font-weight: 600;
+        }
+
+        .progress-step.active {
+            color: var(--blue);
+        }
+
+        .progress-step.completed {
+            color: var(--success);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--light-grey);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .step-number.active {
+            background: var(--blue);
+        }
+
+        .step-number.completed {
+            background: var(--success);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: var(--white);
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: var(--blue);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-text);
+            opacity: 0.7;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .content-editor {
+            margin-bottom: 1.5rem;
+        }
+
+        .content-editor label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .content-editor textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 1px solid var(--light-grey);
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .content-editor input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--light-grey);
+            border-radius: 8px;
+        }
+
+        .editor-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--light-grey);
+            margin-bottom: 1rem;
+        }
+
+        .editor-tab {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: var(--dark-text);
+            opacity: 0.7;
+        }
+
+        .editor-tab.active {
+            opacity: 1;
+            border-bottom-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .editor-tab-content {
+            display: none;
+        }
+
+        .editor-tab-content.active {
+            display: block;
+        }
+
+        /* Dynamic concept cards editor */
+        .concept-item {
+            background: var(--light-grey);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-grey);
+        }
+
+        .concept-item h4 {
+            margin-bottom: 0.5rem;
+            color: var(--blue);
+        }
+
+        .concept-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .add-concept-btn {
+            background: var(--fresh-green);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .remove-concept-btn {
+            background: #ef4444;
+            color: var(--white);
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .equation-editor {
+            background: var(--dark-text);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1rem;
+        }
+
+        .equation-preview {
+            background: var(--light-grey);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-grey);
+            margin-top: 0.5rem;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+        }
+
+        /* Featured elements styles */
+        .featured-element {
+            background: var(--white);
+            border: 1px solid var(--fresh-green);
+            border-radius: 5px;
+            padding: 0.5rem 0.8rem;
+            margin: 0.25rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .featured-element-remove {
+            background: #ef4444;
+            color: var(--white);
+            border: none;
+            border-radius: 3px;
+            padding: 0.2rem 0.4rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .featured-elements-container {
+            border: 2px dashed var(--light-grey);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .featured-elements-container.has-elements {
+            border-color: var(--fresh-green);
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        .no-featured-elements {
+            color: #999;
+            font-style: italic;
+            width: 100%;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .template-options {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🚀 QuantumInsights Article Generator</h1>
+        <p>Create beautiful quantum computing content with ease</p>
+    </header>
+
+    <div class="container">
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-steps">
+                <div class="progress-step active" id="step1">
+                    <span class="step-number active">1</span>
+                    <span>Choose Template</span>
+                </div>
+                <div class="progress-step" id="step2">
+                    <span class="step-number">2</span>
+                    <span>Basic Info</span>
+                </div>
+                <div class="progress-step" id="step3">
+                    <span class="step-number">3</span>
+                    <span>Add Sections</span>
+                </div>
+                <div class="progress-step" id="step4">
+                    <span class="step-number">4</span>
+                    <span>Generate & Download</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template Selection -->
+        <div class="template-selector">
+            <h2>📋 Choose Your Template Type</h2>
+            <div class="template-options">
+                <div class="template-option" data-template="concepts">
+                    <h3>🧠 Concepts Template</h3>
+                    <p>Perfect for educational content about quantum computing concepts, with interactive demos, video sections, and concept cards.</p>
+                    <ul style="text-align: left; margin-top: 1rem;">
+                        <li>Mathematical foundations</li>
+                        <li>Code implementations</li>
+                        <li>Interactive demos</li>
+                        <li>Video explanations</li>
+                    </ul>
+                </div>
+                <div class="template-option" data-template="research">
+                    <h3>🔬 Research Template</h3>
+                    <p>Ideal for research papers and technical documentation, with code examples, performance metrics, and citation formats.</p>
+                    <ul style="text-align: left; margin-top: 1rem;">
+                        <li>Abstract & methodology</li>
+                        <li>Implementation details</li>
+                        <li>Results & analysis</li>
+                        <li>Citations & references</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Information Form -->
+        <div class="form-container" id="basicInfoForm">
+            <h2>📝 Basic Information</h2>
+            
+            <div class="form-section">
+                <h3>📄 Document Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="documentTitle">Title *</label>
+                        <input type="text" id="documentTitle" placeholder="Enter your document title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="documentLevel">Difficulty Level</label>
+                        <select id="documentLevel">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="documentDescription">Description/Subtitle</label>
+                    <textarea id="documentDescription" placeholder="Brief description of what this document covers"></textarea>
+                </div>
+            </div>
+
+            <!-- Featured Elements Section -->
+            <div class="form-section">
+                <h3>⭐ Featured Elements</h3>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Add key elements that make this content special and should be highlighted in meta.json</p>
+                
+                <div class="form-group">
+                    <label for="newFeaturedElement">Add Featured Element</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="newFeaturedElement" placeholder="e.g., Interactive visualization, Real-time simulation, etc.">
+                        <button type="button" class="btn btn-secondary btn-small" onclick="addFeaturedElement()">Add</button>
+                    </div>
+                </div>
+                
+                <div id="featuredElementsList" style="margin-top: 1rem;">
+                    <div class="featured-elements-container">
+                        <div class="no-featured-elements">No featured elements added yet. Add elements that make your content special.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Concepts-specific fields -->
+            <div class="form-section" id="conceptsFields" style="display: none;">
+                <h3>🎯 Concept Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="conceptName">Concept Name</label>
+                        <input type="text" id="conceptName" placeholder="e.g., Quantum Superposition">
+                    </div>
+                    <div class="form-group">
+                        <label for="readingTime">Estimated Reading Time (minutes)</label>
+                        <input type="number" id="readingTime" placeholder="10" min="1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research-specific fields -->
+            <div class="form-section" id="researchFields" style="display: none;">
+                <h3>🔬 Research Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="authors">Authors</label>
+                        <input type="text" id="authors" placeholder="John Doe, Jane Smith, et al.">
+                    </div>
+                    <div class="form-group">
+                        <label for="venue">Conference/Journal</label>
+                        <input type="text" id="venue" placeholder="Quantum Computing Conference 2025">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Research Category</label>
+                        <select id="category">
+                            <option value="Algorithm">Algorithm</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Theory">Theory</option>
+                            <option value="Application">Application</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="framework">Implementation Framework</label>
+                        <input type="text" id="framework" placeholder="Qiskit, PennyLane, Cirq, etc.">
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Location Settings -->
+            <div class="form-section">
+                <h3>📁 File Location Settings</h3>
+                <div class="form-group">
+                    <label for="customPath">Custom Path</label>
+                    <input type="text" id="customPath" placeholder="e.g., concepts/algorithms/quantum-gates.html">
+                    <small style="color: #666; font-style: italic; display: block; margin-top: 0.25rem;">Enter the full path where you want to save the file (including filename)</small>
+                </div>
+                <div id="finalPathPreview" style="background: var(--light-grey); padding: 0.8rem; border-radius: 5px; margin-top: 1rem; font-family: monospace; font-size: 0.9rem;">
+                    <strong>Final path:</strong> <span id="pathPreviewText">Enter a custom path</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--dark-text); opacity: 0.7; margin-top: 0.5rem;">
+                    This path determines where the HTML file will be saved and which meta.json to update. Include the full path with filename and .html extension.
+                </p>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="proceedToSections()">Next: Add Sections →</button>
+            </div>
+        </div>
+
+        <!-- Section Manager -->
+        <div class="section-manager" id="sectionManager" style="display: none;">
+            <h3>🧩 Build Your Content Sections</h3>
+            <p>Drag and drop sections to build your document structure:</p>
+            
+            <h4>Available Sections:</h4>
+            <div class="available-sections" id="availableSections">
+                <!-- Sections will be populated by JavaScript -->
+            </div>
+
+            <h4>Your Document Structure:</h4>
+            <div class="selected-sections" id="selectedSections">
+                <p style="text-align: center; color: var(--light-grey); margin: 2rem 0;">
+                    Click on sections above to add them to your document
+                </p>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="goBackToBasicInfo()">← Back</button>
+                <button class="btn btn-primary" onclick="generatePreview()">Generate Preview →</button>
+            </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-container" id="previewContainer" style="display: none;">
+            <h3>👀 Generated HTML Preview</h3>
+            <div class="code-preview" id="codePreview">
+                <!-- Generated HTML will appear here -->
+            </div>
+            
+            <!-- Meta JSON Updates Section -->
+            <div id="metaUpdatesSection" style="margin-top: 2rem;">
+                <h3>📋 Meta.json Updates Required</h3>
+                <p>Add this entry to the appropriate meta.json file:</p>
+                <div class="code-preview" id="metaPreview" style="max-height: 200px;">
+                    <!-- Meta JSON will appear here -->
+                </div>
+            </div>
+
+            <!-- File Locations Section -->
+            <div id="fileLocationsSection" style="margin-top: 2rem;">
+                <h3>📁 File Locations for Pull Request</h3>
+                <div id="fileInstructions" style="background: var(--light-grey); padding: 1.5rem; border-radius: 10px;">
+                    <!-- File instructions will appear here -->
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="goBackToSections()">← Back to Sections</button>
+                <button class="btn btn-primary" onclick="downloadHTML()">📥 Download HTML</button>
+                <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+                <button class="btn btn-secondary" onclick="copyMetaJSON()">📋 Copy Meta JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Content Editor Modal -->
+    <div class="modal" id="contentEditor">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="editorTitle">Edit Section Content</h3>
+                <button class="close-btn" onclick="closeEditor()">&times;</button>
+            </div>
+            
+            <!-- Basic Info (always shown) -->
+            <div class="content-editor">
+                <label for="sectionTitle">Section Title</label>
+                <input type="text" id="sectionTitle" placeholder="Enter section title">
+            </div>
+            <div class="content-editor">
+                <label for="sectionIcon">Icon</label>
+                <input type="text" id="sectionIcon" placeholder="🎯">
+            </div>
+
+            <!-- Dynamic content area for section-specific fields -->
+            <div id="dynamicContent">
+                <!-- Section-specific fields will be inserted here -->
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="closeEditor()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSection()">Save Section</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="article-generator.js"></script>
+</body>
+</html>

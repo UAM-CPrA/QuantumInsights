@@ -5,454 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[CONCEPT TITLE] - CPrA QuantumInsights</title>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    <style>
-        :root {
-            --fresh-green: #4ade80;
-            --white: #ffffff;
-            --light-grey: #f3f4f6;
-            --blue: #3b82f6;
-            --light-gold: #fbbf24;
-            --dark-text: #1f2937;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--dark-text);
-            background: linear-gradient(135deg, var(--white) 0%, var(--light-grey) 100%);
-            min-height: 100vh;
-        }
-
-        /* Top Navigation - Keep consistent with main site */
-        .top-nav {
-            background: linear-gradient(135deg, var(--blue) 0%, var(--fresh-green) 100%);
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--white);
-            text-decoration: none;
-            background: linear-gradient(45deg, var(--light-gold), var(--white));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-logo-icon {
-            height: 32px;
-            width: 32px;
-            filter: brightness(0) invert(1);
-        }
-
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .logo-title {
-            font-size: 1.8rem;
-        }
-
-        .logo-subtitle {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            font-weight: normal;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Article Layout */
-        .article-container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
-        /* Breadcrumb Navigation */
-        .breadcrumb {
-            background: var(--white);
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .breadcrumb a {
-            color: var(--blue);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .breadcrumb-separator {
-            margin: 0 0.5rem;
-            color: var(--light-grey);
-        }
-
-        /* Article Header */
-        .article-header {
-            background: var(--white);
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            border-top: 4px solid var(--fresh-green);
-            text-align: center;
-        }
-
-        .article-title {
-            font-size: 3rem;
-            background: linear-gradient(135deg, var(--blue), var(--fresh-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .article-subtitle {
-            font-size: 1.2rem;
-            color: var(--dark-text);
-            opacity: 0.8;
-            margin-bottom: 2rem;
-        }
-
-        .article-meta {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            font-size: 0.9rem;
-            color: var(--dark-text);
-            opacity: 0.7;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Content Sections */
-        .content-section {
-            background: var(--white);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .content-section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--blue);
-        }
-
-        .section-icon {
-            width: 25px;
-            height: 25px;
-            background: linear-gradient(135deg, var(--light-gold), var(--fresh-green));
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 0.8rem;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            margin: 0;
-        }
-
-        /* Mathematical Equations */
-        .equation-block {
-            background: var(--light-grey);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.1rem;
-            text-align: center;
-            border-left: 4px solid var(--blue);
-        }
-
-        /* Code Blocks */
-        .code-block {
-            background: var(--dark-text);
-            color: var(--white);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            font-family: 'Courier New', monospace;
-            overflow-x: auto;
-        }
-
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .code-language {
-            background: var(--fresh-green);
-            padding: 0.2rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-        }
-
-        /* Concept Cards */
-        .concept-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .concept-card {
-            background: linear-gradient(135deg, var(--light-grey), var(--white));
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--fresh-green);
-            transition: all 0.3s ease;
-        }
-
-        .concept-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .concept-card h3 {
-            color: var(--blue);
-            margin-bottom: 0.5rem;
-        }
-
-        /* Info Boxes */
-        .info-box {
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            border-left: 4px solid;
-        }
-
-        .info-box.note {
-            background: rgba(59, 130, 246, 0.1);
-            border-left-color: var(--blue);
-        }
-
-        .info-box.warning {
-            background: rgba(251, 191, 36, 0.1);
-            border-left-color: var(--light-gold);
-        }
-
-        .info-box.tip {
-            background: rgba(74, 222, 128, 0.1);
-            border-left-color: var(--fresh-green);
-        }
-
-        .info-box-title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Interactive Elements */
-        .interactive-demo {
-            background: var(--light-grey);
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-            border: 2px dashed var(--blue);
-            text-align: center;
-        }
-
-        .demo-button {
-            background: linear-gradient(135deg, var(--blue), var(--fresh-green));
-            color: var(--white);
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .demo-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-        }
-
-        /* References */
-        .references {
-            background: var(--light-grey);
-            padding: 2rem;
-            border-radius: 15px;
-            margin-top: 3rem;
-        }
-
-        .references h3 {
-            color: var(--blue);
-            margin-bottom: 1rem;
-        }
-
-        .reference-item {
-            margin-bottom: 0.8rem;
-            padding-left: 1rem;
-            border-left: 2px solid var(--fresh-green);
-        }
-
-        /* Navigation between articles */
-        .article-navigation {
-            display: flex;
-            justify-content: space-between;
-            margin: 3rem 0;
-            gap: 1rem;
-        }
-
-        .nav-link {
-            background: var(--white);
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            text-decoration: none;
-            color: var(--dark-text);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            flex: 1;
-            text-align: center;
-        }
-
-        .nav-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-
-        .nav-link.prev::before {
-            content: "← ";
-        }
-
-        .nav-link.next::after {
-            content: " →";
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .article-container {
-                padding: 0 1rem;
-            }
-
-            .article-title {
-                font-size: 2rem;
-            }
-
-            .concept-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .article-navigation {
-                flex-direction: column;
-            }
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark-text);
-            color: var(--white);
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .cpra-logo-small {
-            height: 25px;
-            width: auto;
-            border-radius: 4px;
-            opacity: 0.9;
-        }
-
-        .by-text {
-            color: var(--white);
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-    </style>
+    <link rel="stylesheet" href="concepts-template.css">
 </head>
 <body>
-    <!-- Top Navigation - Keep consistent with main site -->
     <nav class="top-nav">
         <div class="nav-container">
             <a href="../index.html" class="logo">
@@ -476,32 +31,32 @@
         <nav class="breadcrumb">
             <a href="../concepts.html">Concepts</a>
             <span class="breadcrumb-separator">></span>
-            <a href="../concepts.html#section-name">[Section Name]</a>
+            <a href="../concepts.html#section-name">[Section Name]</a> <!-- TODO: Add section name -->
             <span class="breadcrumb-separator">></span>
-            <span>[Article Title]</span>
+            <span>[Article Title]</span> <!-- TODO: Add article title -->
         </nav>
 
         <!-- Article Header -->
         <header class="article-header">
-            <h1 class="article-title">[Your Concept Title Here]</h1>
-            <p class="article-subtitle">A comprehensive guide to understanding [concept name] in quantum computing</p>
+            <h1 class="article-title">[Your Concept Title Here]</h1> <!-- TODO: Add concept title -->
+            <p class="article-subtitle">A comprehensive guide to understanding [concept name] in quantum computing</p> <!-- TODO: Add concept name -->
             <div class="article-meta">
                 <div class="meta-item">
                     <span>📅</span>
-                    <span>Updated: [Date]</span>
+                    <span>Updated: [Date]</span> <!-- TODO: Add date -->
                 </div>
                 <div class="meta-item">
                     <span>⏱️</span>
-                    <span>Reading time: [X] min</span>
+                    <span>Reading time: [X] min</span> <!-- TODO: Add reading time -->
                 </div>
                 <div class="meta-item">
                     <span>🎯</span>
-                    <span>Level: [Beginner/Intermediate/Advanced]</span>
+                    <span>Level: [Beginner/Intermediate/Advanced]</span> <!-- TODO: Add level -->
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Sections -->
+        <!-- USE THE NEXT SECTIONS AS YOU LIKE. FIRST INTRODUCTION THEN FREE FORMAT -->
         <main>
             <!-- Introduction Section -->
             <section class="content-section">
@@ -607,6 +162,35 @@ print(circuit.draw())</code></pre>
                 </div>
             </section>
 
+            <!-- Video Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🎬</span>
+                    <h2 class="section-title">Video Explanation</h2>
+                </div>
+                <p>Visual learners can benefit from this comprehensive video explanation:</p>
+                
+                <div class="video-container">
+                    <h3 class="video-title">[Video Title Here]</h3>
+                    <p class="video-description">Brief description of what the video covers and why it's helpful for understanding this concept.</p>
+                    
+                    <div class="video-wrapper">
+                        <!-- Replace VIDEO_ID with the actual YouTube video ID -->
+                        <iframe 
+                            src="https://www.youtube.com/embed/VIDEO_ID" 
+                            title="[Video Title]"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="info-box note">
+                        <div class="info-box-title">📺 Video Notes</div>
+                        <p>Key timestamps or important points to watch for in the video can be listed here.</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- Applications -->
             <section class="content-section">
                 <div class="section-header">
@@ -673,7 +257,7 @@ print(circuit.draw())</code></pre>
     </footer>
 
     <script>
-        // Example interactive functionality
+        // Example interactive functionality. NEEDS TO BE REPLACED WITH ACTUAL DEMO.
         function runDemo() {
             alert('This is where you would implement an interactive quantum computing demonstration!');
             // Replace with actual quantum circuit simulation or visualization
