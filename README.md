@@ -1,6 +1,15 @@
-# CPrA QuantumInsights
+# QuantumInsights 🚀
 
 A comprehensive platform for quantum computing education and research, featuring interactive concepts, research papers, and an advanced article generator.
+
+## 📚 Table of Contents
+
+- [Overview](#overview)
+- [Publishing Articles](#publishing-articles)
+- [Creating Custom Fields](#creating-custom-fields)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## 🎯 Overview
 
@@ -19,8 +28,30 @@ QuantumInsights is an educational platform that provides:
    ```
 
 2. Follow the guided process:
-   - **Select Template**
-   - **Fill Basic Information, your sections and edit it**: 
+   - **Select Template**: Choose between:
+     - **🧠 New Concepts Template**: Create educational content from scratch
+     - **🔬 New Research Template**: Create research papers and technical documentation
+     - **📤 Edit Existing Article**: Upload an existing HTML file to edit and update
+   - **Fill Basic Information**: 
+     - Document title
+     - Description
+     - Level (Beginner/Intermediate/Advanced)
+     - Reading time
+     - Custom path (e.g., `concepts/algorithms/grover-algorithm.html`)
+     - **Authority Information**: Original author, contributors, version, dates
+   - **Upload Mode** (if selected): Upload your existing HTML file and the generator will parse its content
+   - **Add Sections**: Select and customize sections like:
+     - Introduction
+     - Mathematical Foundation
+     - Implementation Examples
+     - Interactive Demos
+     - Video Explanations
+     - Applications
+     - References
+   - **Edit Content**: Click "Edit" on each section to add your content
+   - **Generate Preview**: Review the final HTML output with authority information
+
+3. **Download** the generated HTML file
 
 ### Step 2: Place Files Correctly
 
@@ -33,18 +64,28 @@ QuantumInsights is an educational platform that provides:
 2. **Update Navigation**: 
    - Add your article to the appropriate index page (`concepts.html` or `research.html`)
    - Update the `meta.json` files in the relevant directories
-     
+
+3. **Assets**: If you have additional assets (images, data files), place them in appropriate folders:
+   ```
+   _img/           # For images
+   assets/         # For other files
+   ```
 
 ### Step 3: Submit for Review
 
 1. **Create a Pull Request**:
+   ```bash
+   git add .
+   git commit -m "Add new article: [Your Article Title]"
+   git push origin feature/your-article-name
+   ```
 
-2. **Pull Request Details**: 
+2. **Pull Request Details**:
    - Title: `Add [Article Type]: [Article Title]`
    - Description: Brief summary of the content and target audience
    - Include screenshots if applicable
 
-4. **Review Process**:
+3. **Review Process**:
    - Our team will review your content for:
      - Technical accuracy
      - Educational value
@@ -56,10 +97,33 @@ QuantumInsights is an educational platform that provides:
 ### 📋 Article Guidelines
 
 - **Quality**: Ensure content is accurate and well-researched
-- **Code**: All code examples should be tested, functional and without AI or any kind of COPYRIGHT
+- **Code**: All code examples should be tested and functional
 - **References**: Include proper citations and references
 - **Accessibility**: Use clear language and explain complex concepts
 - **Consistency**: Follow the established style and structure
+- **Authority**: Always provide complete author information and proper attribution
+
+### 📤 Editing Existing Articles
+
+The article generator now supports editing existing HTML files:
+
+1. **Select "Edit Existing Article"** when choosing your template
+2. **Upload your HTML file** - the generator will automatically:
+   - Extract the title, description, and content
+   - Parse existing sections and their content
+   - Detect author information and metadata
+   - Populate all form fields with extracted data
+3. **Review and edit** the extracted content as needed
+4. **Add new sections** or modify existing ones
+5. **Update authority information** including contributors and version
+6. **Generate updated HTML** with proper attribution and version tracking
+
+**Benefits of Upload Mode:**
+- ✅ Preserves existing content structure
+- ✅ Automatic content extraction and parsing
+- ✅ Easy collaborative editing
+- ✅ Version control and contributor tracking
+- ✅ Consistent formatting and styling
 
 ---
 

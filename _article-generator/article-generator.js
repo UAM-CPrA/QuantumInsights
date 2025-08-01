@@ -49,19 +49,27 @@ class TemplateGenerator {
         // Show appropriate form fields
         const conceptsFields = document.getElementById('conceptsFields');
         const researchFields = document.getElementById('researchFields');
+        const uploadFields = document.getElementById('uploadFields');
+        
+        // Hide all template-specific fields first
+        conceptsFields.style.display = 'none';
+        researchFields.style.display = 'none';
+        uploadFields.style.display = 'none';
         
         if (templateType === 'concepts') {
             conceptsFields.style.display = 'block';
-            researchFields.style.display = 'none';
+            this.showNotification('Concepts template selected! Fill in the basic information.', 'success');
         } else if (templateType === 'research') {
             researchFields.style.display = 'block';
-            conceptsFields.style.display = 'none';
+            this.showNotification('Research template selected! Fill in the basic information.', 'success');
+        } else if (templateType === 'upload') {
+            uploadFields.style.display = 'block';
+            this.showNotification('Upload mode selected! Upload an existing HTML file to edit.', 'success');
         }
         
         // Show basic info form
         document.getElementById('basicInfoForm').classList.add('active');
         this.updateProgress(2);
-        this.showNotification('Template selected! Fill in the basic information.', 'success');
     }
 
     populateAvailableSections() {
@@ -105,22 +113,64 @@ class TemplateGenerator {
 
         this.updateFormData();
         
-        // Populate sections based on selected template
-        const sections = this.availableSections[this.selectedTemplate];
-        const container = document.getElementById('availableSections');
-        container.innerHTML = '';
+        // Handle upload mode differently
+        if (this.selectedTemplate === 'upload') {
+            if (!this.extractedSections || this.extractedSections.length === 0) {
+                this.showNotification('Please upload an HTML file first.', 'warning');
+                return;
+            }
+            
+            // Pre-populate sections from uploaded file
+            this.selectedSections = [...this.extractedSections];
+            
+            // Populate section contents with extracted data
+            this.extractedSections.forEach(section => {
+                const uniqueId = section.uniqueId || section.id;
+                this.sectionContents[uniqueId] = {
+                    title: section.name,
+                    icon: section.icon,
+                    sectionType: section.id,
+                    ...section.content
+                };
+            });
+            
+            // Show available sections for adding more if needed
+            const sections = this.availableSections['concepts']; // Default to concepts sections for upload
+            const container = document.getElementById('availableSections');
+            container.innerHTML = '';
 
-        sections.forEach(section => {
-            const sectionCard = document.createElement('div');
-            sectionCard.className = 'section-card';
-            sectionCard.dataset.sectionId = section.id;
-            sectionCard.innerHTML = `
-                <h4>${section.icon} ${section.name}</h4>
-                <p>${section.description}</p>
-            `;
-            sectionCard.addEventListener('click', () => this.addSection(section));
-            container.appendChild(sectionCard);
-        });
+            sections.forEach(section => {
+                const sectionCard = document.createElement('div');
+                sectionCard.className = 'section-card';
+                sectionCard.dataset.sectionId = section.id;
+                sectionCard.innerHTML = `
+                    <h4>${section.icon} ${section.name}</h4>
+                    <p>${section.description}</p>
+                `;
+                sectionCard.addEventListener('click', () => this.addSection(section));
+                container.appendChild(sectionCard);
+            });
+            
+            this.updateSelectedSectionsUI();
+            this.showNotification('Sections loaded from uploaded file! You can edit them or add new ones.', 'success');
+        } else {
+            // Normal mode - populate sections based on selected template
+            const sections = this.availableSections[this.selectedTemplate];
+            const container = document.getElementById('availableSections');
+            container.innerHTML = '';
+
+            sections.forEach(section => {
+                const sectionCard = document.createElement('div');
+                sectionCard.className = 'section-card';
+                sectionCard.dataset.sectionId = section.id;
+                sectionCard.innerHTML = `
+                    <h4>${section.icon} ${section.name}</h4>
+                    <p>${section.description}</p>
+                `;
+                sectionCard.addEventListener('click', () => this.addSection(section));
+                container.appendChild(sectionCard);
+            });
+        }
 
         // Show section manager
         document.getElementById('basicInfoForm').style.display = 'none';
@@ -972,6 +1022,9 @@ class TemplateGenerator {
             html += this.generateConceptSection(section);
         });
 
+        // Add authority section
+        html += this.generateAuthoritySection(data);
+
         html += `
         </main>
 
@@ -1085,6 +1138,9 @@ class TemplateGenerator {
         this.selectedSections.forEach(section => {
             html += this.generateResearchSection(section);
         });
+
+        // Add authority section
+        html += this.generateAuthoritySection(data);
 
         html += `
             <section class="citation-box">
@@ -1452,9 +1508,72 @@ class TemplateGenerator {
         return html;
     }
 
+    generateAuthoritySection(data) {
+        if (!data.originalAuthor && !data.contributors) {
+            return ''; // Don't show authority section if no author info
+        }
+
+        const currentDate = new Date().toLocaleDateString();
+        const creationDate = data.creationDate ? new Date(data.creationDate).toLocaleDateString() : 'Not specified';
+        const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString() : currentDate;
+
+        return `
+        <section class="authority-section">
+            <div class="section-header">
+                <span class="section-icon">👤</span>
+                <h2 class="section-title">Article Information</h2>
+            </div>
+            <div class="authority-content">
+                <div class="authority-grid">
+                    ${data.originalAuthor ? `
+                    <div class="authority-item">
+                        <h4>Original Author</h4>
+                        <p>${data.originalAuthor}</p>
+                        ${data.authorAffiliation ? `<small>${data.authorAffiliation}</small>` : ''}
+                    </div>
+                    ` : ''}
+                    
+                    ${data.contributors ? `
+                    <div class="authority-item">
+                        <h4>Contributors</h4>
+                        <p>${data.contributors}</p>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="authority-item">
+                        <h4>Version</h4>
+                        <p>${data.version || '1.0'}</p>
+                    </div>
+                    
+                    <div class="authority-item">
+                        <h4>Created</h4>
+                        <p>${creationDate}</p>
+                    </div>
+                    
+                    <div class="authority-item">
+                        <h4>Last Updated</h4>
+                        <p>${lastUpdated}</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+    }
+
     validateBasicInfo() {
         const title = document.getElementById('documentTitle').value.trim();
-        return title.length > 0;
+        const originalAuthor = document.getElementById('originalAuthor').value.trim();
+        
+        if (title.length === 0) {
+            this.showNotification('Please enter a document title.', 'warning');
+            return false;
+        }
+        
+        if (originalAuthor.length === 0) {
+            this.showNotification('Please enter the original author name.', 'warning');
+            return false;
+        }
+        
+        return true;
     }
 
     updateFormData() {
@@ -1469,8 +1588,319 @@ class TemplateGenerator {
             authors: document.getElementById('authors')?.value || '',
             venue: document.getElementById('venue')?.value || '',
             category: document.getElementById('category')?.value || '',
-            framework: document.getElementById('framework')?.value || ''
+            framework: document.getElementById('framework')?.value || '',
+            // Authority fields
+            originalAuthor: document.getElementById('originalAuthor')?.value || '',
+            authorAffiliation: document.getElementById('authorAffiliation')?.value || '',
+            contributors: document.getElementById('contributors')?.value || '',
+            creationDate: document.getElementById('creationDate')?.value || '',
+            lastUpdated: document.getElementById('lastUpdated')?.value || '',
+            version: document.getElementById('version')?.value || '1.0'
         };
+    }
+
+    // File Upload Handling
+    handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (!file.name.endsWith('.html')) {
+            this.showNotification('Please upload an HTML file (.html)', 'warning');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                this.parseUploadedHTML(e.target.result);
+            } catch (error) {
+                this.showNotification('Error parsing HTML file: ' + error.message, 'error');
+            }
+        };
+        reader.readAsText(file);
+
+        // Show upload status
+        const uploadStatus = document.getElementById('uploadStatus');
+        uploadStatus.style.display = 'block';
+        uploadStatus.className = 'upload-status loading';
+        uploadStatus.innerHTML = '⏳ Reading and parsing HTML file...';
+    }
+
+    parseUploadedHTML(htmlContent) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        
+        // Extract basic information
+        const title = doc.querySelector('title')?.textContent?.replace(' - CPrA QuantumInsights', '') || '';
+        const description = doc.querySelector('meta[name="description"]')?.content || 
+                          doc.querySelector('.article-subtitle')?.textContent || '';
+        
+        // Try to determine template type
+        let templateType = 'concepts'; // default
+        if (doc.querySelector('.paper-header') || doc.querySelector('.abstract')) {
+            templateType = 'research';
+        }
+
+        // Extract authority information
+        const authorInfo = this.extractAuthorityInfo(doc);
+        
+        // Extract sections
+        const sections = this.extractSections(doc);
+        
+        // Populate the form with extracted data
+        this.populateFormFromUpload({
+            title,
+            description,
+            templateType,
+            authorInfo,
+            sections
+        });
+
+        // Show parsed information
+        this.showParsedInfo({
+            title,
+            description,
+            templateType,
+            authorInfo,
+            sectionsCount: sections.length
+        });
+
+        // Update upload status
+        const uploadStatus = document.getElementById('uploadStatus');
+        uploadStatus.className = 'upload-status success';
+        uploadStatus.innerHTML = '✅ HTML file parsed successfully! Review the extracted information below.';
+    }
+
+    extractAuthorityInfo(doc) {
+        // Try to extract author information from various possible locations
+        const authorInfo = {
+            originalAuthor: '',
+            authorAffiliation: '',
+            contributors: '',
+            creationDate: '',
+            lastUpdated: '',
+            version: '1.0'
+        };
+
+        // Look for author in research papers
+        const paperAuthors = doc.querySelector('.paper-authors')?.textContent?.trim();
+        if (paperAuthors) {
+            authorInfo.originalAuthor = paperAuthors.split(',')[0]?.trim() || paperAuthors;
+        }
+
+        // Look for author in meta tags
+        const metaAuthor = doc.querySelector('meta[name="author"]')?.content;
+        if (metaAuthor && !authorInfo.originalAuthor) {
+            authorInfo.originalAuthor = metaAuthor;
+        }
+
+        // Look for date information
+        const dateElements = doc.querySelectorAll('.meta-item, .paper-meta .meta-item');
+        dateElements.forEach(element => {
+            const text = element.textContent.toLowerCase();
+            if (text.includes('updated') || text.includes('modified')) {
+                const dateMatch = text.match(/\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2}/);
+                if (dateMatch) {
+                    authorInfo.lastUpdated = this.convertToISODate(dateMatch[0]);
+                }
+            } else if (text.includes('published') || text.includes('created')) {
+                const dateMatch = text.match(/\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2}/);
+                if (dateMatch) {
+                    authorInfo.creationDate = this.convertToISODate(dateMatch[0]);
+                }
+            }
+        });
+
+        return authorInfo;
+    }
+
+    extractSections(doc) {
+        const sections = [];
+        
+        // Look for main content sections
+        const contentSections = doc.querySelectorAll('section.content-section, .content-section, section[class*="section"]');
+        
+        contentSections.forEach((section, index) => {
+            const titleElement = section.querySelector('h2, h3, .section-title');
+            const title = titleElement?.textContent?.trim() || `Section ${index + 1}`;
+            
+            // Try to determine section type based on content and title
+            let sectionType = this.determineSectionType(title, section);
+            
+            // Extract content
+            const content = this.extractSectionContent(section, sectionType);
+            
+            sections.push({
+                id: sectionType,
+                name: title,
+                icon: this.getSectionIcon(sectionType),
+                content: content
+            });
+        });
+
+        return sections;
+    }
+
+    determineSectionType(title, section) {
+        const titleLower = title.toLowerCase();
+        
+        if (titleLower.includes('introduction') || titleLower.includes('overview')) {
+            return 'introduction';
+        } else if (titleLower.includes('mathematical') || titleLower.includes('equation') || section.querySelector('.math, .equation')) {
+            return 'mathematical';
+        } else if (titleLower.includes('implementation') || titleLower.includes('code') || section.querySelector('pre, code')) {
+            return 'implementation';
+        } else if (titleLower.includes('video') || section.querySelector('iframe[src*="youtube"]')) {
+            return 'video';
+        } else if (titleLower.includes('interactive') || titleLower.includes('demo')) {
+            return 'interactive-demo';
+        } else if (titleLower.includes('application') || titleLower.includes('use case')) {
+            return 'applications';
+        } else if (titleLower.includes('result') || titleLower.includes('analysis')) {
+            return 'results';
+        } else if (titleLower.includes('reference') || titleLower.includes('bibliography')) {
+            return 'references';
+        } else if (titleLower.includes('concept') && section.querySelector('.concept-grid, .concept-card')) {
+            return 'concepts-grid';
+        } else {
+            return 'text'; // Default to text section
+        }
+    }
+
+    extractSectionContent(section, sectionType) {
+        const content = {};
+        
+        // Extract common content
+        const textContent = Array.from(section.querySelectorAll('p, div:not(.section-header)'))
+            .map(el => el.textContent.trim())
+            .filter(text => text.length > 0)
+            .join('\n\n');
+        
+        switch (sectionType) {
+            case 'text':
+                content.textContent = textContent;
+                // Look for info boxes
+                const infoBox = section.querySelector('.info-box');
+                if (infoBox) {
+                    content.infoBoxContent = infoBox.textContent.trim();
+                    content.infoBoxType = Array.from(infoBox.classList).find(cls => 
+                        ['note', 'tip', 'warning', 'insight'].includes(cls)) || 'note';
+                }
+                break;
+                
+            case 'mathematical':
+                content.mathDescription = textContent;
+                // Extract equations (this is basic - could be enhanced)
+                const equations = Array.from(section.querySelectorAll('.equation, .math'))
+                    .map(eq => eq.textContent.trim())
+                    .join('\n');
+                content.latexEquations = equations;
+                break;
+                
+            case 'implementation':
+                content.implDescription = textContent;
+                const codeBlocks = Array.from(section.querySelectorAll('pre code, code'))
+                    .map(code => code.textContent.trim())
+                    .join('\n\n');
+                content.codeContent = codeBlocks;
+                // Try to detect language
+                const codeHeader = section.querySelector('.code-header .code-language');
+                content.codeLanguage = codeHeader?.textContent || 'Code';
+                break;
+                
+            case 'video':
+                const iframe = section.querySelector('iframe[src*="youtube"]');
+                if (iframe) {
+                    const videoUrl = iframe.src;
+                    const videoIdMatch = videoUrl.match(/embed\/([^?]+)/);
+                    content.videoId = videoIdMatch ? videoIdMatch[1] : '';
+                }
+                content.videoDescription = textContent;
+                break;
+                
+            case 'references':
+                content.bibliography = textContent;
+                break;
+                
+            default:
+                content.mainContent = textContent;
+                break;
+        }
+        
+        return content;
+    }
+
+    populateFormFromUpload(data) {
+        // Set basic fields
+        document.getElementById('documentTitle').value = data.title;
+        document.getElementById('documentDescription').value = data.description;
+        
+        // Set authority fields
+        if (data.authorInfo.originalAuthor) {
+            document.getElementById('originalAuthor').value = data.authorInfo.originalAuthor;
+        }
+        if (data.authorInfo.authorAffiliation) {
+            document.getElementById('authorAffiliation').value = data.authorInfo.authorAffiliation;
+        }
+        if (data.authorInfo.creationDate) {
+            document.getElementById('creationDate').value = data.authorInfo.creationDate;
+        }
+        if (data.authorInfo.lastUpdated) {
+            document.getElementById('lastUpdated').value = data.authorInfo.lastUpdated;
+        }
+        
+        // Set current date as last updated if not found
+        if (!data.authorInfo.lastUpdated) {
+            document.getElementById('lastUpdated').value = new Date().toISOString().split('T')[0];
+        }
+        
+        // Store extracted sections for later use
+        this.extractedSections = data.sections;
+        
+        // Update form data
+        this.updateFormData();
+    }
+
+    showParsedInfo(data) {
+        const parsedInfo = document.getElementById('parsedInfo');
+        const parsedContent = document.getElementById('parsedContent');
+        
+        parsedContent.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div>
+                    <strong>Title:</strong><br>
+                    <span style="color: #666;">${data.title || 'Not found'}</span>
+                </div>
+                <div>
+                    <strong>Template Type:</strong><br>
+                    <span style="color: #666;">${data.templateType}</span>
+                </div>
+                <div>
+                    <strong>Sections Found:</strong><br>
+                    <span style="color: #666;">${data.sectionsCount}</span>
+                </div>
+                <div>
+                    <strong>Author:</strong><br>
+                    <span style="color: #666;">${data.authorInfo.originalAuthor || 'Not found'}</span>
+                </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <strong>Description:</strong><br>
+                <span style="color: #666;">${data.description || 'Not found'}</span>
+            </div>
+        `;
+        
+        parsedInfo.style.display = 'block';
+    }
+
+    convertToISODate(dateStr) {
+        // Convert various date formats to ISO format (YYYY-MM-DD)
+        try {
+            const date = new Date(dateStr);
+            return date.toISOString().split('T')[0];
+        } catch {
+            return '';
+        }
     }
 
     updateProgress(step) {
@@ -2641,3 +3071,84 @@ TemplateGenerator.prototype.generateEnhancedFileInstructions = async function() 
 
 // Initialize the generator when the page loads
 const generator = new TemplateGenerator();
+
+// Global functions for HTML callbacks
+function handleFileUpload(event) {
+    generator.handleFileUpload(event);
+}
+
+function toggleInfoBox() {
+    const hasInfoBox = document.getElementById('hasInfoBox').value;
+    const infoBoxFields = document.getElementById('infoBoxFields');
+    infoBoxFields.style.display = hasInfoBox === 'yes' ? 'block' : 'none';
+}
+
+function addFeaturedElement() {
+    generator.addFeaturedElement();
+}
+
+function removeFeaturedElement(index) {
+    generator.removeFeaturedElement(index);
+}
+
+function proceedToSections() {
+    generator.proceedToSections();
+}
+
+function goBackToBasicInfo() {
+    generator.goBackToBasicInfo();
+}
+
+function generatePreview() {
+    generator.generatePreview();
+}
+
+function goBackToSections() {
+    generator.goBackToSections();
+}
+
+function downloadHTML() {
+    generator.downloadHTML();
+}
+
+function copyToClipboard() {
+    generator.copyToClipboard();
+}
+
+function copyMetaJSON() {
+    generator.copyMetaJSON();
+}
+
+function closeEditor() {
+    generator.closeEditor();
+}
+
+function saveSection() {
+    generator.saveSection();
+}
+
+// Concept management functions
+function addConcept() {
+    generator.addConcept();
+}
+
+function removeConcept(index) {
+    generator.removeConcept(index);
+}
+
+function updateConcept(index, field, value) {
+    generator.updateConcept(index, field, value);
+}
+
+// Application management functions
+function addApplication() {
+    generator.addApplication();
+}
+
+function removeApplication(index) {
+    generator.removeApplication(index);
+}
+
+function updateApplication(index, field, value) {
+    generator.updateApplication(index, field, value);
+}

@@ -640,6 +640,73 @@
                 padding: 1rem;
             }
         }
+
+        /* Upload Status Styles */
+        .upload-status {
+            padding: 1rem;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .upload-status.loading {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .upload-status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #34d399;
+        }
+
+        .upload-status.error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #f87171;
+        }
+
+        /* Authority Section Styles */
+        .authority-section {
+            background: var(--light-grey);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .authority-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .authority-item {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .authority-item h4 {
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .authority-item p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .authority-item small {
+            display: block;
+            color: #666;
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
     </style>
 </head>
 <body>
@@ -673,11 +740,11 @@
 
         <!-- Template Selection -->
         <div class="template-selector">
-            <h2>📋 Choose Your Template Type</h2>
+            <h2>📋 Choose Your Action</h2>
             <div class="template-options">
                 <div class="template-option" data-template="concepts">
-                    <h3>🧠 Concepts Template</h3>
-                    <p>Perfect for educational content about quantum computing concepts, with interactive demos, video sections, and concept cards.</p>
+                    <h3>🧠 New Concepts Template</h3>
+                    <p>Create new educational content about quantum computing concepts, with interactive demos, video sections, and concept cards.</p>
                     <ul style="text-align: left; margin-top: 1rem;">
                         <li>Mathematical foundations</li>
                         <li>Code implementations</li>
@@ -686,13 +753,23 @@
                     </ul>
                 </div>
                 <div class="template-option" data-template="research">
-                    <h3>🔬 Research Template</h3>
-                    <p>Ideal for research papers and technical documentation, with code examples, performance metrics, and citation formats.</p>
+                    <h3>🔬 New Research Template</h3>
+                    <p>Create new research papers and technical documentation, with code examples, performance metrics, and citation formats.</p>
                     <ul style="text-align: left; margin-top: 1rem;">
                         <li>Abstract & methodology</li>
                         <li>Implementation details</li>
                         <li>Results & analysis</li>
                         <li>Citations & references</li>
+                    </ul>
+                </div>
+                <div class="template-option" data-template="upload">
+                    <h3>📤 Edit Existing Article</h3>
+                    <p>Upload an existing HTML file to edit and update its content. Perfect for revisions, updates, and collaborative editing.</p>
+                    <ul style="text-align: left; margin-top: 1rem;">
+                        <li>Parse existing structure</li>
+                        <li>Edit all sections</li>
+                        <li>Update author information</li>
+                        <li>Maintain formatting</li>
                     </ul>
                 </div>
             </div>
@@ -787,6 +864,65 @@
                         <label for="framework">Implementation Framework</label>
                         <input type="text" id="framework" placeholder="Qiskit, PennyLane, Cirq, etc.">
                     </div>
+                </div>
+            </div>
+
+            <!-- Upload-specific fields -->
+            <div class="form-section" id="uploadFields" style="display: none;">
+                <h3>📤 Upload Existing Article</h3>
+                <div class="form-group">
+                    <label for="htmlFileUpload">Upload HTML File</label>
+                    <input type="file" id="htmlFileUpload" accept=".html" onchange="handleFileUpload(event)">
+                    <small style="color: #666; font-style: italic; display: block; margin-top: 0.25rem;">Upload the HTML file you want to edit. The generator will parse its content and structure.</small>
+                </div>
+                <div id="uploadStatus" style="margin-top: 1rem; padding: 1rem; border-radius: 5px; display: none;">
+                    <!-- Upload status will be shown here -->
+                </div>
+                <div id="parsedInfo" style="margin-top: 1rem; background: var(--light-grey); padding: 1rem; border-radius: 5px; display: none;">
+                    <h4>📋 Parsed Article Information:</h4>
+                    <div id="parsedContent">
+                        <!-- Parsed content info will be shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authority Section (Always visible for all templates) -->
+            <div class="form-section">
+                <h3>👤 Authority & Attribution</h3>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Specify who created and contributed to this article</p>
+                
+                <div class="form-group">
+                    <label for="originalAuthor">Original Author *</label>
+                    <input type="text" id="originalAuthor" placeholder="John Doe" required>
+                    <small style="color: #666; font-style: italic; display: block; margin-top: 0.25rem;">The person who originally created this content</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="authorAffiliation">Author Affiliation</label>
+                    <input type="text" id="authorAffiliation" placeholder="University/Organization">
+                </div>
+                
+                <div class="form-group">
+                    <label for="contributors">Contributors/Editors</label>
+                    <input type="text" id="contributors" placeholder="Jane Smith, Bob Johnson (separate multiple with commas)">
+                    <small style="color: #666; font-style: italic; display: block; margin-top: 0.25rem;">People who have updated or edited this content</small>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="creationDate">Creation Date</label>
+                        <input type="date" id="creationDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastUpdated">Last Updated</label>
+                        <input type="date" id="lastUpdated">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="version">Version</label>
+                    <input type="text" id="version" placeholder="1.0" value="1.0">
+                    <small style="color: #666; font-style: italic; display: block; margin-top: 0.25rem;">Increment for major updates (e.g., 1.0, 1.1, 2.0)</small>
                 </div>
             </div>
 
