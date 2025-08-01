@@ -2,15 +2,6 @@
 
 A comprehensive platform for quantum computing education and research, featuring interactive concepts, research papers, and an advanced article generator.
 
-## 📚 Table of Contents
-
-- [Overview](#overview)
-- [Publishing Articles](#publishing-articles)
-- [Creating Custom Fields](#creating-custom-fields)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## 🎯 Overview
 
 QuantumInsights is an educational platform that provides:
@@ -28,25 +19,8 @@ QuantumInsights is an educational platform that provides:
    ```
 
 2. Follow the guided process:
-   - **Select Template**: Choose between "Concepts" or "Research" template
-   - **Fill Basic Information**: 
-     - Document title
-     - Description
-     - Level (Beginner/Intermediate/Advanced)
-     - Reading time
-     - Custom path (e.g., `concepts/algorithms/grover-algorithm.html`)
-   - **Add Sections**: Select and customize sections like:
-     - Introduction
-     - Mathematical Foundation
-     - Implementation Examples
-     - Interactive Demos
-     - Video Explanations
-     - Applications
-     - References
-   - **Edit Content**: Click "Edit" on each section to add your content
-   - **Generate Preview**: Review the final HTML output
-
-3. **Download** the generated HTML file
+   - **Select Template**
+   - **Fill Basic Information, your sections and edit it**: 
 
 ### Step 2: Place Files Correctly
 
@@ -59,28 +33,18 @@ QuantumInsights is an educational platform that provides:
 2. **Update Navigation**: 
    - Add your article to the appropriate index page (`concepts.html` or `research.html`)
    - Update the `meta.json` files in the relevant directories
-
-3. **Assets**: If you have additional assets (images, data files), place them in appropriate folders:
-   ```
-   _img/           # For images
-   assets/         # For other files
-   ```
+     
 
 ### Step 3: Submit for Review
 
 1. **Create a Pull Request**:
-   ```bash
-   git add .
-   git commit -m "Add new article: [Your Article Title]"
-   git push origin feature/your-article-name
-   ```
 
-2. **Pull Request Details**:
+2. **Pull Request Details**: 
    - Title: `Add [Article Type]: [Article Title]`
    - Description: Brief summary of the content and target audience
    - Include screenshots if applicable
 
-3. **Review Process**:
+4. **Review Process**:
    - Our team will review your content for:
      - Technical accuracy
      - Educational value
@@ -92,7 +56,7 @@ QuantumInsights is an educational platform that provides:
 ### 📋 Article Guidelines
 
 - **Quality**: Ensure content is accurate and well-researched
-- **Code**: All code examples should be tested and functional
+- **Code**: All code examples should be tested, functional and without AI or any kind of COPYRIGHT
 - **References**: Include proper citations and references
 - **Accessibility**: Use clear language and explain complex concepts
 - **Consistency**: Follow the established style and structure
