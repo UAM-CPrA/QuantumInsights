@@ -148,13 +148,11 @@
         </div>
         
         <div class="quantum-buttons">
-            <a href="/" class="quantum-btn">🏠 Return to Reality</a>
-            <a href="/concepts.html" class="quantum-btn">🧠 Explore Concepts</a>
-            <a href="/research.html" class="quantum-btn">🔬 Browse Research</a>
+            <button onclick="goBack()" class="quantum-btn">← Go Back</button>
         </div>
         
         <div class="superposition">
-            <em>This content exists somewhere in the quantum multiverse... just not in this universe! 🌌</em>
+            <em>We are fixing it!</em>
         </div>
     </div>
 
@@ -177,7 +175,7 @@
         // Quantum uncertainty principle for the 404 number
         function quantumUncertainty() {
             const number = document.querySelector('.quantum-404');
-            const alternatives = ['404', '40∀', '4Ω4', '4⊗4', '4ψ4', '4φ4'];
+            const alternatives = ['404', '40ψ', '4⊗4', 'ψ04'];
             let currentIndex = 0;
             
             setInterval(() => {
@@ -192,6 +190,16 @@
                     }, 1000);
                 }
             }, 2000);
+        }
+
+        // Go back to previous page
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                // Fallback to home page if no history
+                window.location.href = '/';
+            }
         }
 
         // Initialize quantum effects
