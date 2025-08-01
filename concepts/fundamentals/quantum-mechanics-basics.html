@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Mechanics Basics - CPrA QuantumInsights</title>
+    <link rel="icon" type="image/svg+xml" href="../../_img/favicon.svg">
+    <link rel="stylesheet" href="../concepts-template.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="../../index.html" class="logo">
+                <img src="../../_img/favicon.svg" alt="CPrA Logo" class="nav-logo-icon">
+                <div class="logo-text">
+                    <span class="logo-title">Quantum Insights</span>
+                    <span class="logo-subtitle">By CPrA</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../../concepts.html">QC Concepts</a></li>
+                <li><a href="../../research.html">Research & Code</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb">
+            <a href="../../concepts.html">Concepts</a>
+            <span class="breadcrumb-separator">></span>
+            <a href="../../concepts.html#fundamentals">Fundamentals</a>
+            <span class="breadcrumb-separator">></span>
+            <span>Quantum Mechanics Basics</span>
+        </nav>
+
+        <!-- Article Header -->
+        <header class="article-header">
+            <h1 class="article-title">Quantum Mechanics Basics</h1>
+            <p class="article-subtitle">Understanding quantum computing starts with grasping the fundamental principles of quantum mechanics.</p>
+            <div class="article-meta">
+                <div class="meta-item">
+                    <span>📅</span>
+                    <span>Updated: January 15, 2025</span>
+                </div>
+                <div class="meta-item">
+                    <span>⏱️</span>
+                    <span>Reading time: 15 min</span>
+                </div>
+                <div class="meta-item">
+                    <span>🎯</span>
+                    <span>Level: Beginner</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Introduction Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🎯</span>
+                    <h2 class="section-title">Introduction</h2>
+                </div>
+                <p>Quantum mechanics forms the theoretical foundation of quantum computing. Unlike classical physics, where objects have definite properties and follow predictable paths, quantum mechanics reveals a world where particles can exist in multiple states simultaneously, interact in mysterious ways across vast distances, and behave according to probabilities rather than certainties.</p>
+                
+                <div class="info-box note">
+                    <div class="info-box-title">💡 Key Insight</div>
+                    <p>Quantum computing harnesses the strange and counterintuitive properties of quantum mechanics to process information in fundamentally new ways, potentially solving problems that are intractable for classical computers.</p>
+                </div>
+
+                <p>In this comprehensive guide, we'll explore the core principles that make quantum computing possible: wave-particle duality, uncertainty principle, quantum states, and probability amplitudes. These concepts might seem abstract at first, but they're the building blocks of revolutionary technologies like quantum computers, quantum cryptography, and quantum sensors.</p>
+            </section>
+
+            <!-- Mathematical Foundation -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">📐</span>
+                    <h2 class="section-title">Mathematical Foundation</h2>
+                </div>
+                <p>Quantum mechanics is fundamentally mathematical. The state of a quantum system is described by a complex-valued function called a wavefunction or state vector. For a simple two-level quantum system (like a qubit), we can write:</p>
+                
+                <div class="equation-block">
+                    |ψ⟩ = α|0⟩ + β|1⟩ where |α|² + |β|² = 1
+                </div>
+                
+                <p>Here, |ψ⟩ represents the quantum state, α and β are complex probability amplitudes, and |0⟩ and |1⟩ are the basis states. The condition |α|² + |β|² = 1 ensures that the total probability of finding the system in any state equals 1.</p>
+
+                <p>The probability of measuring the system in state |0⟩ is |α|², and the probability of measuring it in state |1⟩ is |β|². This is known as Born's rule:</p>
+
+                <div class="equation-block">
+                    P(outcome) = |⟨outcome|ψ⟩|²
+                </div>
+
+                <p>Other fundamental relationships include the de Broglie wavelength λ = h/p (connecting wave and particle properties) and Heisenberg's uncertainty principle ΔxΔp ≥ ℏ/2 (limiting our ability to simultaneously know certain pairs of properties).</p>
+            </section>
+
+            <!-- Key Concepts Grid -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🧩</span>
+                    <h2 class="section-title">Core Quantum Concepts</h2>
+                </div>
+                <p>Let's explore the four fundamental concepts that underpin quantum mechanics and quantum computing:</p>
+                
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>🌊 Wave-Particle Duality</h3>
+                        <p>Quantum objects exhibit both wave and particle properties depending on how we observe them. This duality is captured by the de Broglie wavelength λ = h/p, showing that every particle has an associated wave.</p>
+                        <div class="concept-applications">
+                            <strong>Applications:</strong> Electron diffraction, photon behavior, matter waves
+                        </div>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎲 Uncertainty Principle</h3>
+                        <p>Heisenberg's principle states that certain pairs of properties cannot be simultaneously measured with perfect precision. This isn't due to measurement limitations but reflects the fundamental nature of quantum systems.</p>
+                        <div class="concept-applications">
+                            <strong>Applications:</strong> Measurement limits, quantum cryptography, no-cloning theorem
+                        </div>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⚡ Quantum States</h3>
+                        <p>Quantum systems exist in superposition states described by state vectors in complex vector spaces. These states encode all possible information about the system before measurement.</p>
+                        <div class="concept-applications">
+                            <strong>Applications:</strong> State preparation, quantum algorithms, quantum simulation
+                        </div>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📊 Probability Amplitudes</h3>
+                        <p>Quantum probabilities arise from complex amplitudes through Born's rule. These amplitudes can interfere constructively or destructively, enabling quantum algorithms to amplify correct answers.</p>
+                        <div class="concept-applications">
+                            <strong>Applications:</strong> Measurement outcomes, quantum interference, algorithm design
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Practical Examples -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">💻</span>
+                    <h2 class="section-title">Implementation Examples</h2>
+                </div>
+                <p>Let's see how these quantum mechanical principles translate into practical quantum computing code using Qiskit:</p>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Creating and Manipulating Quantum States</span>
+                        <span class="code-language">Qiskit</span>
+                    </div>
+                    <pre><code># Demonstrate basic quantum mechanics principles
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
+from qiskit.quantum_info import Statevector
+import numpy as np
+
+# Create a qubit in superposition (quantum state)
+qc = QuantumCircuit(1, 1)
+qc.h(0)  # Hadamard gate creates superposition: (|0⟩ + |1⟩)/√2
+
+# Get the state vector to see probability amplitudes
+state = Statevector.from_instruction(qc)
+print("State amplitudes:", state.data)
+print("Probabilities:", np.abs(state.data)**2)
+
+# Demonstrate wave-particle duality with interference
+qc_interference = QuantumCircuit(1, 1)
+qc_interference.h(0)     # Create superposition
+qc_interference.z(0)     # Apply phase (wave property)
+qc_interference.h(0)     # Interfere the amplitudes
+qc_interference.measure(0, 0)
+
+print("Circuit for quantum interference:")
+print(qc_interference.draw())</code></pre>
+                </div>
+
+                <div class="info-box tip">
+                    <div class="info-box-title">💡 Understanding the Code</div>
+                    <p>The Hadamard gate (H) creates a superposition where the qubit exists in both |0⟩ and |1⟩ states simultaneously. The probability amplitudes are equal: α = β = 1/√2. When we apply a second Hadamard after a phase gate, we see quantum interference in action!</p>
+                </div>
+            </section>
+
+            <!-- Interactive Demo Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🎮</span>
+                    <h2 class="section-title">Interactive Demonstration</h2>
+                </div>
+                <p>Experience quantum mechanics principles through interactive simulations:</p>
+                
+                <div class="interactive-demo">
+                    <h3>Quantum State Visualizer</h3>
+                    <p>Click the buttons below to see how quantum states evolve and interfere:</p>
+                    <div class="demo-controls">
+                        <button class="demo-button" onclick="createSuperposition()">Create Superposition</button>
+                        <button class="demo-button" onclick="applyPhase()">Apply Phase</button>
+                        <button class="demo-button" onclick="measureState()">Measure State</button>
+                        <button class="demo-button" onclick="resetState()">Reset</button>
+                    </div>
+                    <div id="stateDisplay" class="state-display">
+                        <p>Current state: |0⟩ (Click "Create Superposition" to begin)</p>
+                        <div class="probability-bars">
+                            <div class="prob-bar">
+                                <span>|0⟩:</span>
+                                <div class="bar-container">
+                                    <div class="bar" id="prob0" style="width: 100%"></div>
+                                </div>
+                                <span id="prob0-text">100%</span>
+                            </div>
+                            <div class="prob-bar">
+                                <span>|1⟩:</span>
+                                <div class="bar-container">
+                                    <div class="bar" id="prob1" style="width: 0%"></div>
+                                </div>
+                                <span id="prob1-text">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🎬</span>
+                    <h2 class="section-title">Video Explanation</h2>
+                </div>
+                <p>Watch this comprehensive video explanation of quantum mechanics fundamentals:</p>
+                
+                <div class="video-container">
+                    <h3 class="video-title">Quantum Mechanics: The Foundation of Quantum Computing</h3>
+                    <p class="video-description">This video covers the essential quantum mechanical concepts that enable quantum computing, with visual demonstrations of superposition, interference, and measurement.</p>
+                    
+                    <div class="video-wrapper">
+                        <!-- Example with a real educational video about quantum mechanics -->
+                        <iframe 
+                            src="https://www.youtube.com/embed/p7bzE1E5PMY" 
+                            title="Quantum Mechanics Fundamentals"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="info-box note">
+                        <div class="info-box-title">📺 Key Timestamps</div>
+                        <p><strong>0:00-2:00:</strong> Introduction to quantum vs. classical physics<br>
+                        <strong>2:00-5:00:</strong> Wave-particle duality demonstration<br>
+                        <strong>5:00-8:00:</strong> Uncertainty principle explained<br>
+                        <strong>8:00-12:00:</strong> Quantum superposition and measurement</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Applications -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">🚀</span>
+                    <h2 class="section-title">Real-World Applications</h2>
+                </div>
+                <p>These quantum mechanical principles enable revolutionary technologies:</p>
+                
+                <div class="info-box tip">
+                    <div class="info-box-title">🎯 From Theory to Practice</div>
+                    <p>Understanding these fundamentals is crucial because they directly enable quantum computing algorithms like Shor's algorithm for factoring and Grover's algorithm for searching.</p>
+                </div>
+                
+                <ul>
+                    <li><strong>Quantum Computing:</strong> Superposition and interference enable quantum algorithms to explore many solutions simultaneously and amplify correct answers</li>
+                    <li><strong>Quantum Cryptography:</strong> The uncertainty principle and no-cloning theorem provide unbreakable security through quantum key distribution</li>
+                    <li><strong>Quantum Sensing:</strong> Quantum states can detect incredibly small changes in magnetic fields, gravity, and time with unprecedented precision</li>
+                    <li><strong>Quantum Simulation:</strong> Quantum computers can simulate other quantum systems, helping us understand complex materials and chemical reactions</li>
+                    <li><strong>Quantum Networks:</strong> Quantum entanglement enables the creation of quantum internet for ultra-secure communications</li>
+                </ul>
+            </section>
+
+            <!-- Common Pitfalls -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">⚠️</span>
+                    <h2 class="section-title">Common Pitfalls & Misconceptions</h2>
+                </div>
+                <p>Avoid these common misunderstandings about quantum mechanics:</p>
+                
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ "Quantum means random"</div>
+                    <p><strong>Wrong:</strong> Quantum systems are random and unpredictable.<br>
+                    <strong>Correct:</strong> Quantum evolution is deterministic and follows Schrödinger's equation. Only measurement outcomes are probabilistic, and these probabilities can be precisely calculated.</p>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ "Superposition means both states exist"</div>
+                    <p><strong>Wrong:</strong> A qubit in superposition is simultaneously in both |0⟩ and |1⟩ states.<br>
+                    <strong>Correct:</strong> Superposition is a unique quantum state that's neither |0⟩ nor |1⟩, but a coherent combination that can exhibit interference effects.</p>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ "Observation changes everything"</div>
+                    <p><strong>Wrong:</strong> Any observation instantly collapses the wavefunction.<br>
+                    <strong>Correct:</strong> Only measurements that distinguish between different quantum states cause collapse. Many operations can be performed while preserving quantum coherence.</p>
+                </div>
+            </section>
+
+            <!-- Next Steps -->
+            <section class="content-section">
+                <div class="section-header">
+                    <span class="section-icon">📚</span>
+                    <h2 class="section-title">What's Next?</h2>
+                </div>
+                <p>Now that you understand the quantum mechanical foundations, you're ready to explore how these principles are applied in quantum computing:</p>
+                
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>🔮 Qubits & Superposition</h3>
+                        <p>Learn how quantum bits leverage superposition to store and process information in ways impossible for classical bits.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎭 Quantum Entanglement</h3>
+                        <p>Discover how quantum particles can be correlated in ways that enable quantum communication and computation.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🚪 Quantum Gates</h3>
+                        <p>Explore the building blocks of quantum circuits and how they manipulate quantum information.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔢 Quantum Algorithms</h3>
+                        <p>See how quantum mechanical principles are harnessed to create powerful algorithms for specific problems.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- References -->
+            <section class="references">
+                <h3>📚 References & Further Reading</h3>
+                <div class="reference-item">
+                    <strong>[1]</strong> Nielsen, M. A., & Chuang, I. L. "Quantum Computation and Quantum Information." Cambridge University Press (2010).
+                </div>
+                <div class="reference-item">
+                    <strong>[2]</strong> Feynman, R. P. "The Feynman Lectures on Physics, Volume III: Quantum Mechanics." Addison-Wesley (1965).
+                </div>
+                <div class="reference-item">
+                    <strong>[3]</strong> Griffiths, D. J. "Introduction to Quantum Mechanics." Cambridge University Press (2017).
+                </div>
+                <div class="reference-item">
+                    <strong>[4]</strong> Qiskit Textbook: Quantum Mechanics. Available at: https://qiskit.org/textbook/ch-prerequisites/
+                </div>
+                <div class="reference-item">
+                    <strong>[5]</strong> Preskill, J. "Quantum Information and Computation." California Institute of Technology Lecture Notes (2018).
+                </div>
+            </section>
+        </main>
+
+        <!-- Navigation to other articles -->
+        <nav class="article-navigation">
+            <a href="#" class="nav-link prev" title="Coming Soon">← Previous Concept</a>
+            <a href="../../concepts.html" class="nav-link">Back to Concepts</a>
+            <a href="qubits-superposition.html" class="nav-link next">Next: Qubits & Superposition →</a>
+        </nav>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 CPrA QuantumInsights. Advancing quantum education and research.</p>
+            <span class="by-text">by</span>
+            <img src="../../_img/favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
+        </div>
+    </footer>
+
+    <script>
+        // Interactive quantum state demonstration
+        let currentState = { alpha: 1, beta: 0, phase: 0 };
+        
+        function updateStateDisplay() {
+            const prob0 = Math.pow(Math.abs(currentState.alpha), 2);
+            const prob1 = Math.pow(Math.abs(currentState.beta), 2);
+            
+            document.getElementById('prob0').style.width = (prob0 * 100) + '%';
+            document.getElementById('prob1').style.width = (prob1 * 100) + '%';
+            document.getElementById('prob0-text').textContent = Math.round(prob0 * 100) + '%';
+            document.getElementById('prob1-text').textContent = Math.round(prob1 * 100) + '%';
+            
+            const stateText = `Current state: ${currentState.alpha.toFixed(2)}|0⟩ + ${currentState.beta.toFixed(2)}|1⟩`;
+            document.querySelector('#stateDisplay p').textContent = stateText;
+        }
+        
+        function createSuperposition() {
+            currentState.alpha = 1/Math.sqrt(2);
+            currentState.beta = 1/Math.sqrt(2);
+            currentState.phase = 0;
+            updateStateDisplay();
+            showNotification("Superposition created! Equal probability amplitudes.", "success");
+        }
+        
+        function applyPhase() {
+            if (Math.abs(currentState.beta) > 0) {
+                currentState.phase += Math.PI/2;
+                // For simplicity in web demo, we'll just show the effect visually
+                // In reality: currentState.beta = currentState.beta * exp(i * π/2)
+                updateStateDisplay();
+                showNotification("Phase applied! This affects interference patterns.", "info");
+            } else {
+                showNotification("Create superposition first to see phase effects!", "warning");
+            }
+        }
+        
+        function measureState() {
+            const prob0 = Math.pow(Math.abs(currentState.alpha), 2);
+            const random = Math.random();
+            
+            if (random < prob0) {
+                currentState.alpha = 1;
+                currentState.beta = 0;
+                showNotification("Measured |0⟩! State collapsed.", "info");
+            } else {
+                currentState.alpha = 0;
+                currentState.beta = 1;
+                showNotification("Measured |1⟩! State collapsed.", "info");
+            }
+            updateStateDisplay();
+        }
+        
+        function resetState() {
+            currentState.alpha = 1;
+            currentState.beta = 0;
+            currentState.phase = 0;
+            updateStateDisplay();
+            showNotification("State reset to |0⟩", "info");
+        }
+        
+        function showNotification(message, type = "info") {
+            // Create a simple notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-weight: 500;
+                max-width: 300px;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Initialize the display
+        updateStateDisplay();
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some visual flair to concept cards
+        document.querySelectorAll('.concept-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+                this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            });
+        });
+    </script>
+
+    <style>
+        /* Additional styles for the interactive demo */
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, var(--blue), var(--fresh-green));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .state-display {
+            background: var(--light-grey);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--blue);
+        }
+        
+        .probability-bars {
+            margin-top: 15px;
+        }
+        
+        .prob-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .prob-bar span:first-child {
+            width: 30px;
+            font-weight: bold;
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--fresh-green));
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .prob-bar span:last-child {
+            width: 40px;
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        .concept-applications {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--blue);
+            font-style: italic;
+        }
+    </style>
+</body>
+</html>

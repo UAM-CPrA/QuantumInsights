@@ -1,221 +1,137 @@
 {
   "title": "Quantum Computing Concepts",
   "description": "Master the fundamental principles and advanced concepts of quantum computing through structured learning modules.",
+  "type": "root",
   "sections": [
     {
       "id": "fundamentals",
-      "title": "Fundamentals",
+      "title": "Fundamentals", 
       "icon": "⚛️",
-      "folder": "fundamentals",
-      "items": [
+      "type": "folder",
+      "path": "concepts/fundamentals",
+      "url": "concepts/fundamentals.html",
+      "description": "Core principles of quantum mechanics and quantum information theory.",
+      "children": [
         {
-          "id": "basics",
+          "id": "quantum-mechanics-basics",
           "title": "Quantum Mechanics Basics",
-          "description": "Understanding quantum computing starts with grasping the fundamental principles of quantum mechanics that make quantum computation possible.",
-          "concepts": [
-            {
-              "title": "Wave-Particle Duality",
-              "description": "Learn how quantum objects exhibit both wave and particle properties, forming the foundation of quantum behavior."
-            },
-            {
-              "title": "Uncertainty Principle",
-              "description": "Explore Heisenberg's uncertainty principle and its implications for quantum information processing."
-            },
-            {
-              "title": "Quantum States",
-              "description": "Understand how quantum systems are described by state vectors in complex vector spaces."
-            },
-            {
-              "title": "Probability Amplitudes",
-              "description": "Discover how quantum probabilities arise from complex amplitudes and Born's rule."
-            }
-          ]
+          "type": "page",
+          "path": "concepts/fundamentals/quantum-mechanics-basics.html",
+          "url": "concepts/fundamentals/quantum-mechanics-basics.html",
+          "description": "Understanding quantum computing starts with grasping the fundamental principles of quantum mechanics.",
+          "level": "Beginner",
+          "readingTime": 15,
+          "tags": ["fundamentals", "quantum-mechanics", "basics"],
+          "featured": ["math", "interactive"],
+          "lastUpdated": "2025-01-15"
         },
         {
-          "id": "qubits",
+          "id": "qubits-superposition",
           "title": "Qubits & Superposition",
+          "type": "page",
+          "path": "concepts/fundamentals/qubits-superposition.html",
+          "url": "concepts/fundamentals/qubits-superposition.html",
           "description": "The quantum bit (qubit) is the fundamental unit of quantum information, capable of existing in superposition states.",
-          "concepts": [
-            {
-              "title": "Bloch Sphere",
-              "description": "Visualize qubit states using the Bloch sphere representation and understand geometric interpretations."
-            },
-            {
-              "title": "Superposition States",
-              "description": "Learn how qubits can exist in combinations of |0⟩ and |1⟩ states simultaneously."
-            },
-            {
-              "title": "Quantum Interference",
-              "description": "Explore how quantum amplitudes can interfere constructively or destructively."
-            },
-            {
-              "title": "Multi-Qubit Systems",
-              "description": "Understand how multiple qubits create exponentially larger state spaces."
-            }
-          ]
+          "level": "Beginner",
+          "readingTime": 12,
+          "tags": ["qubits", "superposition", "bloch-sphere"],
+          "featured": ["interactive", "video"],
+          "lastUpdated": "2025-01-10"
         },
         {
           "id": "entanglement",
           "title": "Quantum Entanglement",
-          "description": "Quantum entanglement creates correlations between qubits that have no classical analogue, enabling powerful quantum algorithms.",
-          "concepts": [
-            {
-              "title": "Bell States",
-              "description": "Study the four maximally entangled two-qubit states that form the foundation of quantum protocols."
-            },
-            {
-              "title": "Non-locality",
-              "description": "Understand how entangled particles exhibit correlations that violate local realism."
-            },
-            {
-              "title": "Quantum Teleportation",
-              "description": "Learn how quantum states can be transmitted using entanglement and classical communication."
-            },
-            {
-              "title": "Entanglement Measures",
-              "description": "Explore mathematical tools to quantify and characterize entanglement in quantum systems."
-            }
-          ]
-        },
-        {
-          "id": "measurement",
-          "title": "Quantum Measurement",
-          "description": "Quantum measurement is a fundamental process that extracts classical information from quantum systems.",
-          "concepts": [
-            {
-              "title": "Projective Measurements",
-              "description": "Understand how measurements project quantum states onto orthogonal subspaces."
-            },
-            {
-              "title": "POVM Measurements",
-              "description": "Learn about generalized measurements using Positive Operator-Valued Measures."
-            },
-            {
-              "title": "Measurement Statistics",
-              "description": "Explore how quantum probabilities determine measurement outcomes and their statistics."
-            },
-            {
-              "title": "Weak Measurements",
-              "description": "Discover how weak measurements can extract information without fully collapsing quantum states."
-            }
-          ]
+          "type": "page",
+          "path": "concepts/fundamentals/entanglement.html",
+          "url": "concepts/fundamentals/entanglement.html",
+          "description": "Explore the mysterious quantum phenomenon that Einstein called 'spooky action at a distance'.",
+          "level": "Intermediate",
+          "readingTime": 18,
+          "tags": ["entanglement", "non-locality", "bell-states"],
+          "featured": ["math", "interactive"],
+          "lastUpdated": "2025-01-08"
         }
       ]
     },
     {
       "id": "quantum-gates",
       "title": "Quantum Gates",
-      "icon": "🎛️",
-      "folder": "quantum-gates",
-      "items": [
+      "icon": "🚪",
+      "type": "folder",
+      "path": "concepts/quantum-gates",
+      "url": "concepts/quantum-gates.html",
+      "description": "Learn about quantum gates and quantum circuit construction.",
+      "children": [
         {
-          "id": "single-gates",
+          "id": "single-qubit-gates",
           "title": "Single-Qubit Gates",
-          "description": "Single-qubit gates are the fundamental building blocks for quantum computation, manipulating individual qubits.",
-          "concepts": [
-            {
-              "title": "Pauli Gates (X, Y, Z)",
-              "description": "Learn the three Pauli gates and their geometric interpretations on the Bloch sphere."
-            },
-            {
-              "title": "Hadamard Gate",
-              "description": "Understand how the Hadamard gate creates superposition states from computational basis states."
-            },
-            {
-              "title": "Phase Gates (S, T)",
-              "description": "Explore phase gates that add relative phases without changing probability amplitudes."
-            },
-            {
-              "title": "Rotation Gates",
-              "description": "Master arbitrary single-qubit rotations around different axes of the Bloch sphere."
-            }
-          ]
+          "type": "page",
+          "path": "concepts/quantum-gates/single-qubit-gates.html",
+          "url": "concepts/quantum-gates/single-qubit-gates.html",
+          "description": "Master the fundamental single-qubit gates: Pauli gates, Hadamard, and rotation gates.",
+          "level": "Beginner",
+          "readingTime": 20,
+          "tags": ["gates", "pauli", "hadamard", "rotations"],
+          "featured": ["math", "interactive"],
+          "lastUpdated": "2025-01-12"
         },
         {
-          "id": "multi-gates",
+          "id": "multi-qubit-gates",
           "title": "Multi-Qubit Gates",
-          "description": "Multi-qubit gates enable entanglement and complex quantum operations across multiple qubits.",
-          "concepts": [
-            {
-              "title": "CNOT Gate",
-              "description": "The controlled-NOT gate is fundamental for creating entanglement and quantum logic."
-            },
-            {
-              "title": "Controlled Gates",
-              "description": "Learn how to construct controlled versions of any single-qubit gate."
-            },
-            {
-              "title": "Toffoli Gate",
-              "description": "Explore the three-qubit Toffoli gate and its role in reversible computation."
-            },
-            {
-              "title": "Fredkin Gate",
-              "description": "Understand the controlled-SWAP gate and its applications in quantum algorithms."
-            }
-          ]
+          "type": "page",
+          "path": "concepts/quantum-gates/multi-qubit-gates.html",
+          "url": "concepts/quantum-gates/multi-qubit-gates.html",
+          "description": "Understand CNOT, Toffoli, and other multi-qubit gates that enable quantum computation.",
+          "level": "Intermediate",
+          "readingTime": 25,
+          "tags": ["cnot", "toffoli", "controlled-gates"],
+          "featured": ["math", "code"],
+          "lastUpdated": "2025-01-05"
         }
       ]
     },
     {
       "id": "algorithms",
-      "title": "Algorithms",
-      "icon": "🔬",
-      "folder": "algorithms",
-      "items": [
-        {
-          "id": "deutsch",
-          "title": "Deutsch Algorithm",
-          "description": "The Deutsch algorithm demonstrates quantum advantage for determining if a function is constant or balanced.",
-          "concepts": [
-            {
-              "title": "Oracle Construction",
-              "description": "Learn how to construct quantum oracles for boolean functions."
-            },
-            {
-              "title": "Quantum Parallelism",
-              "description": "Understand how quantum superposition enables parallel function evaluation."
-            }
-          ]
-        },
+      "title": "Quantum Algorithms",
+      "icon": "⚡",
+      "type": "folder",
+      "path": "concepts/algorithms",
+      "url": "concepts/algorithms.html",
+      "description": "Explore famous quantum algorithms and their implementations.",
+      "children": [
         {
           "id": "grover",
-          "title": "Grover's Search",
-          "description": "Grover's algorithm provides quadratic speedup for searching unsorted databases.",
-          "concepts": [
-            {
-              "title": "Amplitude Amplification",
-              "description": "Master the core technique of selectively amplifying desired quantum amplitudes."
-            },
-            {
-              "title": "Optimal Search Time",
-              "description": "Understand why Grover's algorithm achieves optimal search complexity."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "advanced-topics",
-      "title": "Advanced Topics",
-      "icon": "🚀",
-      "folder": "advanced-topics",
-      "items": [
+          "title": "Grover's Search Algorithm",
+          "type": "folder",
+          "path": "concepts/algorithms/grover",
+          "url": "concepts/algorithms/grover.html",
+          "description": "Learn Grover's quantum search algorithm that provides quadratic speedup for unstructured search.",
+          "level": "Intermediate",
+          "tags": ["grover", "search", "amplitude-amplification"],
+          "featured": ["math", "code", "interactive"],
+          "lastUpdated": "2025-01-20"
+        },
         {
-          "id": "error-correction",
-          "title": "Error Correction",
-          "description": "Quantum error correction protects quantum information from decoherence and operational errors.",
-          "concepts": [
-            {
-              "title": "Stabilizer Codes",
-              "description": "Learn the mathematical framework of stabilizer codes for quantum error correction."
-            },
-            {
-              "title": "Surface Codes",
-              "description": "Explore topological quantum error correction using surface codes."
-            }
-          ]
-        }
+          "id": "shor-algorithm",
+          "title": "Shor's Factoring Algorithm",
+          "type": "page",
+          "path": "concepts/algorithms/shor-algorithm.html",
+          "url": "concepts/algorithms/shor-algorithm.html",
+          "description": "Understand Shor's algorithm for integer factorization and its implications for cryptography.",
+          "level": "Advanced",
+          "readingTime": 45,
+          "tags": ["shor", "factoring", "cryptography", "qft"],
+          "featured": ["math", "code"],
+          "lastUpdated": "2025-01-18"
+        },
+        { "id": "quantum-mechanics-basics-", "title": "Quantum Mechanics Basics ", "type": "page", "path": "concepts/algorithms/h.html", "url": "concepts/algorithms/h.html", "description": "fsdjklfjkasl", "level": "Beginner", "readingTime": 15, "tags": [ "quantum-concepts" ], "featured": [ "basic" ], "lastUpdated": "2025-08-01" } 
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "lastUpdated": "2025-01-31",
+    "version": "2.0",
+    "totalConcepts": 7,
+    "structure": "hierarchical"
+  }
 }

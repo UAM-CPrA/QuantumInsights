@@ -1,0 +1,67 @@
+{
+  "title": "Quantum Algorithms Research",
+  "description": "Comprehensive research collection on quantum algorithms, from theoretical foundations to practical implementations.",
+  "type": "folder",
+  "parentPath": "research",
+  "items": [
+    {
+      "id": "grover-implementations",
+      "title": "Grover's Algorithm Implementations",
+      "type": "page",
+      "path": "research/quantum-algorithms/grover-implementations.html",
+      "url": "research/quantum-algorithms/grover-implementations.html",
+      "description": "Practical implementations of Grover's search algorithm across different quantum computing platforms including Qiskit, Cirq, and PennyLane.",
+      "authors": ["Smith, J.", "Chen, L.", "Johnson, M."],
+      "venue": "Quantum Computing Research, 2024",
+      "category": "Algorithm Implementation",
+      "framework": "Qiskit, Cirq, PennyLane",
+      "tags": ["grover", "implementation", "quantum-search", "comparison"],
+      "featured": true,
+      "level": "Intermediate",
+      "readingTime": 25,
+      "lastUpdated": "2025-01-15"
+    },
+    {
+      "id": "variational-quantum-algorithms",
+      "title": "Variational Quantum Algorithms for Optimization",
+      "type": "page",
+      "path": "research/quantum-algorithms/variational-quantum-algorithms.html",
+      "url": "research/quantum-algorithms/variational-quantum-algorithms.html",
+      "description": "Comprehensive study of variational quantum algorithms (VQAs) including QAOA, VQE, and their applications to optimization problems in finance and logistics.",
+      "authors": ["Rodriguez, A.", "Patel, K.", "Williams, S."],
+      "venue": "Nature Quantum Information, 2024",
+      "category": "Variational Algorithms",
+      "framework": "Qiskit, TensorFlow Quantum",
+      "tags": ["VQA", "QAOA", "VQE", "optimization", "variational"],
+      "featured": true,
+      "level": "Advanced",
+      "readingTime": 35,
+      "lastUpdated": "2025-01-20"
+    },
+    {
+      "id": "quantum-machine-learning",
+      "title": "Quantum Machine Learning Algorithms",
+      "type": "page",
+      "path": "research/quantum-algorithms/quantum-machine-learning.html",
+      "url": "research/quantum-algorithms/quantum-machine-learning.html",
+      "description": "Survey of quantum machine learning algorithms including quantum neural networks, quantum support vector machines, and quantum clustering algorithms.",
+      "authors": ["Lee, H.", "Zhang, Q.", "Anderson, R."],
+      "venue": "Physical Review X Quantum, 2024",
+      "category": "Quantum Machine Learning",
+      "framework": "PennyLane, TensorFlow Quantum",
+      "tags": ["QML", "quantum-neural-networks", "QSVM", "clustering"],
+      "featured": false,
+      "level": "Expert",
+      "readingTime": 40,
+      "lastUpdated": "2025-01-10"
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2025-08-01",
+    "version": "1.0",
+    "totalArticles": 3,
+    "structure": "folder",
+    "difficulty": "Intermediate to Expert",
+    "estimatedTime": "100 minutes"
+  }
+}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Computing Concepts - CPrA QuantumInsights</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="_img/favicon.svg">
     <style>
         :root {
             --fresh-green: #4ade80;
@@ -325,7 +325,7 @@
     <nav class="top-nav">
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <img src="favicon.svg" alt="CPrA Logo" class="nav-logo-icon">
+                <img src="_img/favicon.svg" alt="CPrA Logo" class="nav-logo-icon">
                 <div class="logo-text">
                     <span class="logo-title">QuantumInsights</span>
                     <span class="logo-subtitle">By CPrA</span>
@@ -367,11 +367,35 @@
         <div class="footer-content">
             <p>&copy; 2025 CPrA QuantumInsights. Advancing quantum education and research.</p>
             <span class="by-text">by</span>
-            <img src="favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
+            <img src="_img/favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
         </div>
     </footer>
 
     <script>
+        // Global 404 Error Handler for GitHub Pages
+        function handle404Error(url) {
+            console.log('404 Error detected for URL:', url);
+            // Redirect to our quantum 404 page
+            window.location.href = '_404/404.html';
+        }
+
+        // Enhanced navigation function with 404 handling
+        function navigateToPage(url) {
+            // Check if the URL exists by making a HEAD request
+            fetch(url, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = url;
+                    } else {
+                        handle404Error(url);
+                    }
+                })
+                .catch(error => {
+                    console.error('Navigation error:', error);
+                    handle404Error(url);
+                });
+        }
+
         // Load concepts data and populate the page
         async function loadConceptsData() {
             try {
@@ -386,18 +410,43 @@
                 const sidebarNav = document.querySelector('.sidebar-nav');
                 const content = document.querySelector('.content');
                 
-                // Keep the header but remove existing sections
-                const existingSections = content.querySelectorAll('.content-section');
-                existingSections.forEach(section => section.remove());
+                // Clear all content including any article content
+                content.innerHTML = '';
                 
-                // Generate sidebar navigation
+                // Restore the content header
+                const contentHeader = document.createElement('div');
+                contentHeader.className = 'content-header';
+                contentHeader.innerHTML = `
+                    <h1>${data.title}</h1>
+                    <p>${data.description}</p>
+                `;
+                content.appendChild(contentHeader);
+                
+                // Generate sidebar navigation with new hierarchical format
                 generateSidebarNavigation(data.sections, sidebarNav);
                 
-                // Generate main content sections
+                // Generate main content sections with new format
                 generateMainContent(data.sections, content);
+                
+                // Update URL to remove any article parameters
+                window.history.replaceState({}, data.title, window.location.pathname);
+                
+                console.log('Loaded concepts data:', data);
                 
             } catch (error) {
                 console.error('Error loading concepts data:', error);
+                // Fallback error display
+                const content = document.querySelector('.content');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.padding = '2rem';
+                errorDiv.style.textAlign = 'center';
+                errorDiv.style.color = '#ef4444';
+                errorDiv.innerHTML = `
+                    <h2>Error Loading Content</h2>
+                    <p>Failed to load concepts data. Please check the console for details.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+                content.appendChild(errorDiv);
             }
         }
 
@@ -413,13 +462,48 @@
                 sectionTitle.textContent = section.title;
                 navSection.appendChild(sectionTitle);
                 
-                section.items.forEach((item, index) => {
-                    const navItem = document.createElement('a');
-                    navItem.href = `#${item.id}`;
-                    navItem.className = `nav-item ${index === 0 && section.id === 'fundamentals' ? 'active' : ''}`;
-                    navItem.textContent = item.title;
-                    navSection.appendChild(navItem);
-                });
+                // Add children as nav items (like the original format)
+                if (section.children && section.children.length > 0) {
+                    section.children.forEach((child, index) => {
+                        const navItem = document.createElement('a');
+                        navItem.href = child.url || `#${child.id}`;
+                        navItem.className = `nav-item ${index === 0 && section.id === 'fundamentals' ? 'active' : ''}`;
+                        navItem.textContent = child.title;
+                        
+                        // Add click handler for navigation items too
+                        navItem.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            
+                            if (child.type === 'folder') {
+                                // Load folder content
+                                loadFolderContent(child.path);
+                            } else if (child.type === 'page') {
+                                // Navigate directly to the HTML file using safe navigation
+                                navigateToPage(child.path || child.url);
+                            }
+                        });
+                        
+                        // Add subtle metadata in navigation (keeping the cool feature but simpler)
+                        if (child.level || child.readingTime || child.featured) {
+                            const metadata = document.createElement('div');
+                            metadata.className = 'nav-item-metadata';
+                            metadata.style.fontSize = '0.75rem';
+                            metadata.style.color = '#9ca3af';
+                            metadata.style.marginTop = '0.2rem';
+                            metadata.style.opacity = '0.8';
+                            
+                            const metaParts = [];
+                            if (child.level) metaParts.push(child.level);
+                            if (child.readingTime) metaParts.push(`${child.readingTime}min`);
+                            if (child.featured) metaParts.push('★');
+                            
+                            metadata.textContent = metaParts.join(' • ');
+                            navItem.appendChild(metadata);
+                        }
+                        
+                        navSection.appendChild(navItem);
+                    });
+                }
                 
                 container.appendChild(navSection);
             });
@@ -429,45 +513,385 @@
             const header = container.querySelector('.content-header');
             
             sections.forEach(section => {
-                section.items.forEach(item => {
-                    const contentSection = document.createElement('section');
-                    contentSection.className = 'content-section';
-                    contentSection.id = item.id;
+                // Create content section for each main section (like the original format)
+                const contentSection = document.createElement('section');
+                contentSection.className = 'content-section';
+                contentSection.id = section.id;
+                
+                const sectionHeader = document.createElement('h2');
+                sectionHeader.innerHTML = `<span class="section-icon">${getIconForSection(section.id)}</span>${section.title}`;
+                
+                const description = document.createElement('p');
+                description.textContent = section.description;
+                
+                contentSection.appendChild(sectionHeader);
+                contentSection.appendChild(description);
+                
+                // Convert children back to concepts format (like original)
+                if (section.children && section.children.length > 0) {
+                    const conceptGrid = document.createElement('div');
+                    conceptGrid.className = 'concept-grid';
                     
-                    const sectionHeader = document.createElement('h2');
-                    sectionHeader.innerHTML = `<span class="section-icon">${getIconForSection(section.id)}</span>${item.title}`;
-                    
-                    const description = document.createElement('p');
-                    description.textContent = item.description;
-                    
-                    contentSection.appendChild(sectionHeader);
-                    contentSection.appendChild(description);
-                    
-                    if (item.concepts && item.concepts.length > 0) {
-                        const conceptGrid = document.createElement('div');
-                        conceptGrid.className = 'concept-grid';
+                    section.children.forEach(child => {
+                        const conceptCard = document.createElement('div');
+                        conceptCard.className = 'concept-card';
                         
-                        item.concepts.forEach(concept => {
-                            const conceptCard = document.createElement('div');
-                            conceptCard.className = 'concept-card';
-                            
-                            const conceptTitle = document.createElement('h3');
-                            conceptTitle.textContent = concept.title;
-                            
-                            const conceptDescription = document.createElement('p');
-                            conceptDescription.textContent = concept.description;
-                            
-                            conceptCard.appendChild(conceptTitle);
-                            conceptCard.appendChild(conceptDescription);
-                            conceptGrid.appendChild(conceptCard);
-                        });
+                        const conceptTitle = document.createElement('h3');
+                        conceptTitle.textContent = child.title;
                         
-                        contentSection.appendChild(conceptGrid);
+                        const conceptDescription = document.createElement('p');
+                        conceptDescription.textContent = child.description;
+                        
+                        conceptCard.appendChild(conceptTitle);
+                        conceptCard.appendChild(conceptDescription);
+                        
+                        // Add the new metadata section (keeping the cool labels)
+                        if (child.level || child.readingTime || child.featured || (child.tags && child.tags.length > 0)) {
+                            const metadata = document.createElement('div');
+                            metadata.className = 'concept-metadata';
+                            metadata.style.marginTop = '1rem';
+                            metadata.style.display = 'flex';
+                            metadata.style.flexWrap = 'wrap';
+                            metadata.style.gap = '0.5rem';
+                            metadata.style.fontSize = '0.8rem';
+                            
+                            // Level badge
+                            if (child.level) {
+                                const levelBadge = document.createElement('span');
+                                levelBadge.textContent = child.level;
+                                levelBadge.style.background = '#e5e7eb';
+                                levelBadge.style.color = '#374151';
+                                levelBadge.style.padding = '0.2rem 0.5rem';
+                                levelBadge.style.borderRadius = '12px';
+                                levelBadge.style.fontWeight = '500';
+                                metadata.appendChild(levelBadge);
+                            }
+                            
+                            // Reading time badge
+                            if (child.readingTime) {
+                                const timeBadge = document.createElement('span');
+                                timeBadge.textContent = `${child.readingTime} min read`;
+                                timeBadge.style.background = '#dbeafe';
+                                timeBadge.style.color = '#1e40af';
+                                timeBadge.style.padding = '0.2rem 0.5rem';
+                                timeBadge.style.borderRadius = '12px';
+                                timeBadge.style.fontWeight = '500';
+                                metadata.appendChild(timeBadge);
+                            }
+                            
+                            // Featured badge
+                            if (child.featured) {
+                                const featuredBadge = document.createElement('span');
+                                featuredBadge.textContent = '★ Featured';
+                                featuredBadge.style.background = '#fbbf24';
+                                featuredBadge.style.color = '#92400e';
+                                featuredBadge.style.padding = '0.2rem 0.5rem';
+                                featuredBadge.style.borderRadius = '12px';
+                                featuredBadge.style.fontWeight = 'bold';
+                                metadata.appendChild(featuredBadge);
+                            }
+                            
+                            // Tags
+                            if (child.tags && child.tags.length > 0) {
+                                child.tags.slice(0, 3).forEach(tag => { // Limit to 3 tags for clean layout
+                                    const tagBadge = document.createElement('span');
+                                    tagBadge.textContent = tag;
+                                    tagBadge.style.background = '#f3f4f6';
+                                    tagBadge.style.color = '#6b7280';
+                                    tagBadge.style.padding = '0.2rem 0.5rem';
+                                    tagBadge.style.borderRadius = '12px';
+                                    tagBadge.style.fontSize = '0.75rem';
+                                    metadata.appendChild(tagBadge);
+                                });
+                            }
+                            
+                            conceptCard.appendChild(metadata);
+                        }
+                        
+                        // Add click handler for navigation
+                        if (child.url) {
+                            conceptCard.style.cursor = 'pointer';
+                            conceptCard.addEventListener('click', async () => {
+                                // Check if it's a folder or specific article
+                                if (child.type === 'folder') {
+                                    // It's a folder - load the meta.json from that folder
+                                    loadFolderContent(child.path);
+                                } else if (child.type === 'page') {
+                                    // Navigate directly to the HTML file using safe navigation
+                                    navigateToPage(child.path || child.url);
+                                } else {
+                                    // Fallback - navigate to the URL using safe navigation
+                                    navigateToPage(child.path || child.url);
+                                }
+                            });
+                            
+                            // Add hover effect for clickable cards
+                            conceptCard.addEventListener('mouseenter', () => {
+                                conceptCard.style.transform = 'translateY(-5px)';
+                                conceptCard.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                            });
+                            
+                            conceptCard.addEventListener('mouseleave', () => {
+                                conceptCard.style.transform = 'translateY(0)';
+                                conceptCard.style.boxShadow = 'none';
+                            });
+                        }
+                        
+                        conceptGrid.appendChild(conceptCard);
+                    });
+                    
+                    contentSection.appendChild(conceptGrid);
+                }
+                
+                container.appendChild(contentSection);
+            });
+        }
+
+        // Function to load content from a specific folder
+        async function loadFolderContent(folderPath) {
+            try {
+                // Construct the meta.json path for the folder
+                const metaPath = `${folderPath}/meta.json`;
+                console.log('Loading folder content from:', metaPath);
+                
+                const response = await fetch(metaPath);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${metaPath}: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Update page title and description
+                document.querySelector('.content-header h1').textContent = data.title;
+                document.querySelector('.content-header p').textContent = data.description;
+                
+                // Update browser history and URL (optional)
+                const newUrl = `${window.location.pathname}?folder=${encodeURIComponent(folderPath)}`;
+                window.history.pushState({ folderPath }, data.title, newUrl);
+                
+                // Clear existing content
+                const sidebarNav = document.querySelector('.sidebar-nav');
+                const content = document.querySelector('.content');
+                
+                // Keep the header but remove existing sections
+                const existingSections = content.querySelectorAll('.content-section');
+                existingSections.forEach(section => section.remove());
+                
+                // Generate new content based on folder structure
+                if (data.items && data.items.length > 0) {
+                    // This is a leaf folder with items (articles)
+                    generateFolderContent(data, content);
+                    generateFolderNavigation(data, sidebarNav);
+                } else if (data.sections && data.sections.length > 0) {
+                    // This is a parent folder with sections
+                    generateSidebarNavigation(data.sections, sidebarNav);
+                    generateMainContent(data.sections, content);
+                }
+                
+                console.log('Loaded folder data:', data);
+                
+            } catch (error) {
+                console.error('Error loading folder content:', error);
+                // Show error message
+                const content = document.querySelector('.content');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.padding = '2rem';
+                errorDiv.style.textAlign = 'center';
+                errorDiv.style.color = '#ef4444';
+                errorDiv.innerHTML = `
+                    <h2>Error Loading Folder</h2>
+                    <p>Failed to load content from folder. Please check the console for details.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <button onclick="loadConceptsData()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--blue); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Back to Main Page
+                    </button>
+                `;
+                content.appendChild(errorDiv);
+            }
+        }
+
+        // Function to generate content for a leaf folder (with items)
+        function generateFolderContent(data, container) {
+            const contentSection = document.createElement('section');
+            contentSection.className = 'content-section';
+            
+            const sectionHeader = document.createElement('h2');
+            sectionHeader.innerHTML = `<span class="section-icon">📚</span>${data.title}`;
+            
+            const description = document.createElement('p');
+            description.textContent = data.description;
+            
+            contentSection.appendChild(sectionHeader);
+            contentSection.appendChild(description);
+            
+            if (data.items && data.items.length > 0) {
+                const conceptGrid = document.createElement('div');
+                conceptGrid.className = 'concept-grid';
+                
+                data.items.forEach(item => {
+                    const conceptCard = document.createElement('div');
+                    conceptCard.className = 'concept-card';
+                    
+                    const conceptTitle = document.createElement('h3');
+                    conceptTitle.textContent = item.title;
+                    
+                    const conceptDescription = document.createElement('p');
+                    conceptDescription.textContent = item.description;
+                    
+                    conceptCard.appendChild(conceptTitle);
+                    conceptCard.appendChild(conceptDescription);
+                    
+                    // Add metadata for items
+                    if (item.level || item.readingTime || item.featured || (item.tags && item.tags.length > 0)) {
+                        const metadata = document.createElement('div');
+                        metadata.className = 'concept-metadata';
+                        metadata.style.marginTop = '1rem';
+                        metadata.style.display = 'flex';
+                        metadata.style.flexWrap = 'wrap';
+                        metadata.style.gap = '0.5rem';
+                        metadata.style.fontSize = '0.8rem';
+                        
+                        // Add badges (same as before)
+                        if (item.level) {
+                            const levelBadge = document.createElement('span');
+                            levelBadge.textContent = item.level;
+                            levelBadge.style.background = '#e5e7eb';
+                            levelBadge.style.color = '#374151';
+                            levelBadge.style.padding = '0.2rem 0.5rem';
+                            levelBadge.style.borderRadius = '12px';
+                            levelBadge.style.fontWeight = '500';
+                            metadata.appendChild(levelBadge);
+                        }
+                        
+                        if (item.readingTime) {
+                            const timeBadge = document.createElement('span');
+                            timeBadge.textContent = `${item.readingTime} min read`;
+                            timeBadge.style.background = '#dbeafe';
+                            timeBadge.style.color = '#1e40af';
+                            timeBadge.style.padding = '0.2rem 0.5rem';
+                            timeBadge.style.borderRadius = '12px';
+                            timeBadge.style.fontWeight = '500';
+                            metadata.appendChild(timeBadge);
+                        }
+                        
+                        if (item.featured) {
+                            const featuredBadge = document.createElement('span');
+                            featuredBadge.textContent = '★ Featured';
+                            featuredBadge.style.background = '#fbbf24';
+                            featuredBadge.style.color = '#92400e';
+                            featuredBadge.style.padding = '0.2rem 0.5rem';
+                            featuredBadge.style.borderRadius = '12px';
+                            featuredBadge.style.fontWeight = 'bold';
+                            metadata.appendChild(featuredBadge);
+                        }
+                        
+                        if (item.tags && item.tags.length > 0) {
+                            item.tags.slice(0, 3).forEach(tag => {
+                                const tagBadge = document.createElement('span');
+                                tagBadge.textContent = tag;
+                                tagBadge.style.background = '#f3f4f6';
+                                tagBadge.style.color = '#6b7280';
+                                tagBadge.style.padding = '0.2rem 0.5rem';
+                                tagBadge.style.borderRadius = '12px';
+                                tagBadge.style.fontSize = '0.75rem';
+                                metadata.appendChild(tagBadge);
+                            });
+                        }
+                        
+                        conceptCard.appendChild(metadata);
                     }
                     
-                    container.appendChild(contentSection);
+                    // Items are always articles, so navigate to HTML page
+                    if (item.url) {
+                        conceptCard.style.cursor = 'pointer';
+                        conceptCard.addEventListener('click', () => {
+                            if (item.url.startsWith('http')) {
+                                window.open(item.url, '_blank');
+                            } else {
+                                navigateToPage(item.url);
+                            }
+                        });
+                        
+                        conceptCard.addEventListener('mouseenter', () => {
+                            conceptCard.style.transform = 'translateY(-5px)';
+                            conceptCard.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                        });
+                        
+                        conceptCard.addEventListener('mouseleave', () => {
+                            conceptCard.style.transform = 'translateY(0)';
+                            conceptCard.style.boxShadow = 'none';
+                        });
+                    }
+                    
+                    conceptGrid.appendChild(conceptCard);
                 });
+                
+                contentSection.appendChild(conceptGrid);
+            }
+            
+            container.appendChild(contentSection);
+        }
+
+        // Function to generate navigation for a folder
+        function generateFolderNavigation(data, container) {
+            container.innerHTML = '';
+            
+            // Add a back button
+            const backSection = document.createElement('div');
+            backSection.className = 'nav-section';
+            
+            const backButton = document.createElement('a');
+            backButton.href = '#';
+            backButton.className = 'nav-item';
+            backButton.textContent = '← Back to Main';
+            backButton.style.fontWeight = 'bold';
+            backButton.style.color = 'var(--blue)';
+            backButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadConceptsData();
             });
+            
+            backSection.appendChild(backButton);
+            container.appendChild(backSection);
+            
+            // Show items if available
+            if (data.items && data.items.length > 0) {
+                const navSection = document.createElement('div');
+                navSection.className = 'nav-section';
+                
+                const sectionTitle = document.createElement('div');
+                sectionTitle.className = 'nav-section-title';
+                sectionTitle.textContent = data.title;
+                navSection.appendChild(sectionTitle);
+                
+                data.items.forEach((item, index) => {
+                    const navItem = document.createElement('a');
+                    navItem.href = item.url || `#${item.id}`;
+                    navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
+                    navItem.textContent = item.title;
+                    
+                    if (item.level || item.readingTime || item.featured) {
+                        const metadata = document.createElement('div');
+                        metadata.className = 'nav-item-metadata';
+                        metadata.style.fontSize = '0.75rem';
+                        metadata.style.color = '#9ca3af';
+                        metadata.style.marginTop = '0.2rem';
+                        metadata.style.opacity = '0.8';
+                        
+                        const metaParts = [];
+                        if (item.level) metaParts.push(item.level);
+                        if (item.readingTime) metaParts.push(`${item.readingTime}min`);
+                        if (item.featured) metaParts.push('★');
+                        
+                        metadata.textContent = metaParts.join(' • ');
+                        navItem.appendChild(metadata);
+                    }
+                    
+                    navSection.appendChild(navItem);
+                });
+                
+                container.appendChild(navSection);
+            }
         }
 
         function getIconForSection(sectionId) {
@@ -496,9 +920,37 @@
 
         // Load data when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            loadConceptsData();
+            // Check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const folderPath = urlParams.get('folder');
+            const articleId = urlParams.get('article');
+            
+            if (folderPath) {
+                loadFolderContent(folderPath);
+            } else if (articleId) {
+                // Need to find the article data - for now, go back to main and let user navigate
+                console.log('Article ID found in URL:', articleId);
+                loadConceptsData();
+            } else {
+                loadConceptsData();
+            }
+            
             addNavigationHandlers();
         });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.folderPath) {
+                loadFolderContent(event.state.folderPath);
+            } else if (event.state && event.state.article) {
+                loadArticleContent(event.state.article);
+            } else {
+                loadConceptsData();
+            }
+        });
     </script>
+    
+    <!-- Quantum 404 Handler -->
+    <script src="_404/quantum-404-handler.js"></script>
 </body>
 </html>

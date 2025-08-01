@@ -1,78 +1,41 @@
 {
   "title": "Quantum Algorithms",
-  "description": "Core quantum algorithms that demonstrate quantum advantage and practical applications.",
-  "algorithms": [
+  "description": "Explore famous quantum algorithms and their implementations.",
+  "type": "folder",
+  "parentPath": "concepts",
+  "items": [
     {
-      "id": "deutsch-algorithm",
-      "title": "Deutsch Algorithm",
-      "description": "The Deutsch algorithm demonstrates quantum advantage for determining if a function is constant or balanced.",
-      "complexity": {
-        "classical": "O(2) - requires 2 function evaluations",
-        "quantum": "O(1) - requires only 1 quantum evaluation"
-      },
-      "circuit_depth": 3,
-      "qubits_required": 2,
-      "key_concepts": [
-        "Quantum parallelism",
-        "Oracle construction",
-        "Quantum interference",
-        "Superposition advantage"
-      ],
-      "implementation": {
-        "oracle_types": ["Constant: f(0) = f(1)", "Balanced: f(0) ≠ f(1)"],
-        "measurement_outcomes": {
-          "constant": "Always measure |0⟩",
-          "balanced": "Always measure |1⟩"
-        }
-      }
-    },
-    {
-      "id": "grovers-algorithm",
+      "id": "grover",
       "title": "Grover's Search Algorithm",
-      "description": "Grover's algorithm provides quadratic speedup for searching unsorted databases.",
-      "complexity": {
-        "classical": "O(N) - linear search through N items",
-        "quantum": "O(√N) - quadratic speedup"
-      },
-      "circuit_depth": "O(√N)",
-      "qubits_required": "log₂(N)",
-      "key_concepts": [
-        "Amplitude amplification",
-        "Oracle marking",
-        "Diffusion operator",
-        "Optimal iteration count"
-      ],
-      "implementation": {
-        "optimal_iterations": "π√N/4",
-        "success_probability": "≈ 1 for optimal iterations",
-        "oracle_types": ["Single item", "Multiple items", "Partial search"]
-      }
+      "type": "folder",
+      "path": "concepts/algorithms/grover",
+      "url": "concepts/algorithms/grover.html",
+      "description": "Comprehensive exploration of Grover's quantum search algorithm, from basic principles to advanced applications.",
+      "level": "Intermediate",
+      "readingTime": 60,
+      "tags": ["grover", "search", "amplitude-amplification", "quantum-counting"],
+      "featured": ["math", "code", "interactive"],
+      "lastUpdated": "2025-08-01"
     },
     {
-      "id": "shors-algorithm",
+      "id": "shor-algorithm",
       "title": "Shor's Factoring Algorithm",
-      "description": "Shor's algorithm efficiently factors large integers, threatening current cryptographic systems.",
-      "complexity": {
-        "classical": "O(exp(n^(1/3))) - exponential in number length",
-        "quantum": "O(n³) - polynomial in number length"
-      },
-      "circuit_depth": "O(n³)",
-      "qubits_required": "2n + 3",
-      "key_concepts": [
-        "Period finding",
-        "Quantum Fourier Transform",
-        "Continued fractions",
-        "Modular exponentiation"
-      ],
-      "implementation": {
-        "steps": [
-          "Classical preprocessing",
-          "Quantum period finding",
-          "QFT measurement",
-          "Classical post-processing"
-        ],
-        "success_probability": "≥ 1/2 per attempt"
-      }
-    }
-  ]
+      "type": "page",
+      "path": "concepts/algorithms/shor-algorithm.html",
+      "url": "concepts/algorithms/shor-algorithm.html",
+      "description": "Understand Shor's algorithm for integer factorization and its implications for cryptography.",
+      "level": "Advanced",
+      "readingTime": 45,
+      "tags": ["shor", "factoring", "cryptography", "qft"],
+      "featured": ["math", "code"],
+      "lastUpdated": "2025-01-18"
+    },
+    { "id": "quantum-mechanics-basics-", "title": "Quantum Mechanics Basics ", "type": "page", "path": "concepts/algorithms/h.html", "url": "concepts/algorithms/h.html", "description": "fsdjklfjkasl", "level": "Beginner", "readingTime": 15, "tags": [ "quantum-concepts" ], "featured": [ "basic" ], "lastUpdated": "2025-08-01" } 
+  ],
+  "metadata": {
+    "lastUpdated": "2025-01-31",
+    "version": "2.0",
+    "totalItems": 2,
+    "structure": "hierarchical"
+  }
 }

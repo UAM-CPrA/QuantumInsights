@@ -1,142 +1,92 @@
 {
   "title": "Quantum Gates",
-  "description": "Quantum gates are the fundamental operations in quantum computing, analogous to logic gates in classical computing.",
-  "sections": [
+  "description": "Learn about quantum gates and quantum circuit construction.",
+  "type": "folder",
+  "parentPath": "concepts",
+  "items": [
     {
       "id": "single-qubit-gates",
       "title": "Single-Qubit Gates",
-      "icon": "🎯",
-      "description": "Gates that operate on individual qubits, performing rotations on the Bloch sphere.",
-      "gates": [
+      "type": "page",
+      "path": "concepts/quantum-gates/single-qubit-gates.html",
+      "url": "concepts/quantum-gates/single-qubit-gates.html",
+      "description": "Master the fundamental single-qubit gates: Pauli gates, Hadamard, and rotation gates.",
+      "level": "Beginner",
+      "readingTime": 20,
+      "tags": ["gates", "pauli", "hadamard", "rotations"],
+      "featured": ["math", "interactive"],
+      "lastUpdated": "2025-01-12",
+      "concepts": [
         {
-          "name": "Pauli-X Gate",
-          "symbol": "X",
-          "description": "Bit-flip gate that rotates the qubit state 180° around the X-axis of the Bloch sphere.",
-          "matrix": "[[0, 1], [1, 0]]",
-          "action": "|0⟩ → |1⟩, |1⟩ → |0⟩",
-          "applications": ["Quantum NOT operation", "State preparation", "Error correction"]
+          "title": "Pauli Gates (X, Y, Z)",
+          "description": "Learn the three Pauli gates and their geometric interpretations on the Bloch sphere.",
+          "mathematical_foundation": "X = σₓ, Y = σᵧ, Z = σz (Pauli matrices)",
+          "applications": ["Bit flips", "Phase flips", "Error correction"]
         },
         {
-          "name": "Pauli-Y Gate",
-          "symbol": "Y",
-          "description": "Rotates the qubit state 180° around the Y-axis, combining bit and phase flip.",
-          "matrix": "[[0, -i], [i, 0]]",
-          "action": "|0⟩ → i|1⟩, |1⟩ → -i|0⟩",
-          "applications": ["Complex rotations", "Quantum algorithms", "Gate decomposition"]
+          "title": "Hadamard Gate",
+          "description": "Understand how the Hadamard gate creates superposition states from computational basis states.",
+          "mathematical_foundation": "H = (X + Z)/√2",
+          "applications": ["Superposition creation", "Quantum algorithms", "Interference"]
         },
         {
-          "name": "Pauli-Z Gate",
-          "symbol": "Z",
-          "description": "Phase-flip gate that adds a phase of π to the |1⟩ state.",
-          "matrix": "[[1, 0], [0, -1]]",
-          "action": "|0⟩ → |0⟩, |1⟩ → -|1⟩",
-          "applications": ["Phase manipulation", "Quantum interference", "Oracle construction"]
+          "title": "Phase Gates (S, T)",
+          "description": "Explore phase gates that add relative phases without changing probability amplitudes.",
+          "mathematical_foundation": "S = diag(1, i), T = diag(1, e^(iπ/4))",
+          "applications": ["Phase manipulation", "Gate decomposition", "Fault tolerance"]
         },
         {
-          "name": "Hadamard Gate",
-          "symbol": "H",
-          "description": "Creates superposition states by rotating 180° around the X+Z axis.",
-          "matrix": "[[1/√2, 1/√2], [1/√2, -1/√2]]",
-          "action": "|0⟩ → (|0⟩ + |1⟩)/√2, |1⟩ → (|0⟩ - |1⟩)/√2",
-          "applications": ["Superposition creation", "Quantum algorithms", "Measurement basis change"]
-        },
-        {
-          "name": "S Gate (Phase)",
-          "symbol": "S",
-          "description": "Adds a phase of π/2 to the |1⟩ state.",
-          "matrix": "[[1, 0], [0, i]]",
-          "action": "|0⟩ → |0⟩, |1⟩ → i|1⟩",
-          "applications": ["Phase accumulation", "Gate sequences", "Quantum Fourier Transform"]
-        },
-        {
-          "name": "T Gate",
-          "symbol": "T",
-          "description": "Adds a phase of π/4 to the |1⟩ state.",
-          "matrix": "[[1, 0], [0, e^(iπ/4)]]",
-          "action": "|0⟩ → |0⟩, |1⟩ → e^(iπ/4)|1⟩",
-          "applications": ["Universal gate sets", "Fault-tolerant computing", "Phase precision"]
+          "title": "Rotation Gates",
+          "description": "Master arbitrary single-qubit rotations around different axes of the Bloch sphere.",
+          "mathematical_foundation": "Rₓ(θ), Rᵧ(θ), Rz(θ) = e^(-iθσ/2)",
+          "applications": ["Continuous control", "Variational circuits", "Optimization"]
         }
       ]
     },
     {
       "id": "multi-qubit-gates",
       "title": "Multi-Qubit Gates",
-      "icon": "🔗",
-      "description": "Gates that operate on multiple qubits simultaneously, enabling entanglement.",
-      "gates": [
+      "type": "page",
+      "path": "concepts/quantum-gates/multi-qubit-gates.html",
+      "url": "concepts/quantum-gates/multi-qubit-gates.html",
+      "description": "Understand CNOT, Toffoli, and other multi-qubit gates that enable quantum computation.",
+      "level": "Intermediate",
+      "readingTime": 25,
+      "tags": ["cnot", "toffoli", "controlled-gates"],
+      "featured": ["math", "code"],
+      "lastUpdated": "2025-01-05",
+      "concepts": [
         {
-          "name": "CNOT Gate",
-          "symbol": "CNOT",
-          "description": "Controlled-NOT gate that flips the target qubit if the control qubit is |1⟩.",
-          "matrix": "[[1,0,0,0], [0,1,0,0], [0,0,0,1], [0,0,1,0]]",
-          "action": "|00⟩ → |00⟩, |01⟩ → |01⟩, |10⟩ → |11⟩, |11⟩ → |10⟩",
-          "applications": ["Entanglement generation", "Quantum error correction", "Quantum teleportation"]
+          "title": "CNOT Gate",
+          "description": "The controlled-NOT gate is fundamental for creating entanglement and quantum logic.",
+          "mathematical_foundation": "CNOT|c,t⟩ = |c, t⊕c⟩",
+          "applications": ["Entanglement creation", "Quantum logic", "Error syndrome"]
         },
         {
-          "name": "CZ Gate",
-          "symbol": "CZ",
-          "description": "Controlled-Z gate that applies a phase flip to |11⟩ state.",
-          "matrix": "[[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,-1]]",
-          "action": "|11⟩ → -|11⟩, other states unchanged",
-          "applications": ["Phase entanglement", "Quantum algorithms", "Surface codes"]
+          "title": "Controlled Gates",
+          "description": "Learn how to construct controlled versions of any single-qubit gate.",
+          "mathematical_foundation": "CU = |0⟩⟨0| ⊗ I + |1⟩⟨1| ⊗ U",
+          "applications": ["Conditional operations", "Algorithm building blocks", "Phase estimation"]
         },
         {
-          "name": "SWAP Gate",
-          "symbol": "SWAP",
-          "description": "Exchanges the states of two qubits.",
-          "matrix": "[[1,0,0,0], [0,0,1,0], [0,1,0,0], [0,0,0,1]]",
-          "action": "|00⟩ → |00⟩, |01⟩ → |10⟩, |10⟩ → |01⟩, |11⟩ → |11⟩",
-          "applications": ["Qubit routing", "Quantum sorting", "Circuit optimization"]
+          "title": "Toffoli Gate",
+          "description": "Explore the three-qubit Toffoli gate and its role in reversible computation.",
+          "mathematical_foundation": "CCX|a,b,c⟩ = |a,b,c⊕(a∧b)⟩",
+          "applications": ["Classical simulation", "Quantum arithmetic", "Universal computation"]
         },
         {
-          "name": "Toffoli Gate",
-          "symbol": "CCX",
-          "description": "Three-qubit gate that flips the target if both control qubits are |1⟩.",
-          "matrix": "8x8 matrix with controlled-controlled-X behavior",
-          "action": "|110⟩ → |111⟩, |111⟩ → |110⟩, others unchanged",
-          "applications": ["Universal classical computation", "Quantum arithmetic", "Reversible logic"]
-        },
-        {
-          "name": "Fredkin Gate",
-          "symbol": "CSWAP",
-          "description": "Controlled-SWAP gate that swaps two qubits conditioned on a control.",
-          "matrix": "8x8 matrix with controlled-SWAP behavior",
-          "action": "Swaps qubits 2 and 3 if qubit 1 is |1⟩",
-          "applications": ["Quantum comparisons", "Entanglement routing", "Quantum algorithms"]
-        }
-      ]
-    },
-    {
-      "id": "rotation-gates",
-      "title": "Rotation Gates",
-      "icon": "🔄",
-      "description": "Parameterized gates that perform arbitrary rotations around Bloch sphere axes.",
-      "gates": [
-        {
-          "name": "RX Gate",
-          "symbol": "RX(θ)",
-          "description": "Rotation around X-axis by angle θ.",
-          "matrix": "[[cos(θ/2), -i*sin(θ/2)], [-i*sin(θ/2), cos(θ/2)]]",
-          "action": "Arbitrary rotation around X-axis",
-          "applications": ["Arbitrary state preparation", "Variational algorithms", "Pulse sequences"]
-        },
-        {
-          "name": "RY Gate",
-          "symbol": "RY(θ)",
-          "description": "Rotation around Y-axis by angle θ.",
-          "matrix": "[[cos(θ/2), -sin(θ/2)], [sin(θ/2), cos(θ/2)]]",
-          "action": "Arbitrary rotation around Y-axis",
-          "applications": ["Amplitude manipulation", "Quantum machine learning", "Optimization"]
-        },
-        {
-          "name": "RZ Gate",
-          "symbol": "RZ(θ)",
-          "description": "Rotation around Z-axis by angle θ.",
-          "matrix": "[[e^(-iθ/2), 0], [0, e^(iθ/2)]]",
-          "action": "Arbitrary phase rotation",
-          "applications": ["Phase evolution", "Quantum Fourier Transform", "Hamiltonian simulation"]
+          "title": "Fredkin Gate",
+          "description": "Understand the controlled-SWAP gate and its applications in quantum algorithms.",
+          "mathematical_foundation": "CSWAP controlled swap operation",
+          "applications": ["Quantum comparisons", "Amplitude manipulation", "Quantum routing"]
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "lastUpdated": "2025-01-31",
+    "version": "2.0",
+    "totalItems": 2,
+    "structure": "hierarchical"
+  }
 }

@@ -216,6 +216,9 @@ class TemplateGenerator {
         const formattedHtml = this.formatHTML(html);
         document.getElementById('codePreview').textContent = formattedHtml;
         
+        // Update form data before generating meta updates
+        this.updateFormData();
+        
         // Generate meta.json updates and file location instructions
         this.generateMetaUpdates();
         this.generateEnhancedFileInstructions();
@@ -284,27 +287,27 @@ class TemplateGenerator {
             if (depth === 1) {
                 // In main concepts folder (concepts/file.html)
                 cssPath = 'concepts-template.css';
-                faviconPath = '../favicon.svg';
+                faviconPath = '../_img/favicon.svg';
             } else {
                 // In a subcategory folder (concepts/algorithms/file.html)
                 cssPath = '../concepts-template.css';
-                faviconPath = '../../favicon.svg';
+                faviconPath = '../../_img/favicon.svg';
             }
         } else if (customPath.startsWith('research/')) {
             if (depth === 1) {
                 // In main research folder (research/file.html)
                 cssPath = 'research-template.css';
-                faviconPath = '../favicon.svg';
+                faviconPath = '../_img/favicon.svg';
             } else {
                 // In a subcategory folder (research/papers/file.html)
                 cssPath = '../research-template.css';
-                faviconPath = '../../favicon.svg';
+                faviconPath = '../../_img/favicon.svg';
             }
         } else {
             // Default paths for other locations
             const backLevels = '../'.repeat(depth);
             cssPath = backLevels + 'style.css'; // Generic fallback
-            faviconPath = backLevels + 'favicon.svg';
+            faviconPath = backLevels + '_img/favicon.svg';
         }
         
         return { cssPath, faviconPath };
@@ -360,6 +363,7 @@ class TemplateGenerator {
                 return this.generateDefaultFields(existingContent);
         }
     }
+
 
     generateTextFields(content) {
         return `
@@ -603,6 +607,7 @@ class TemplateGenerator {
             </div>
         `;
     }
+
 
     saveSection() {
         const section = this.selectedSections[this.currentEditingSection];
@@ -1529,7 +1534,7 @@ class TemplateGenerator {
         });
     }
 
-    generateMetaUpdates() {
+    async generateMetaUpdates() {
         const customPath = this.formData.customPath || '';
         const pathParts = customPath.split('/');
         
@@ -1541,159 +1546,521 @@ class TemplateGenerator {
         const mainCategory = pathParts[0]; // concepts or research
         const subcategory = pathParts.length > 2 ? pathParts[1] : null; // algorithms, fundamentals, etc.
         
-        let metaUpdatesHTML = '';
+        // Show loading state
+        document.getElementById('metaPreview').innerHTML = '<p style="color: #666;">🔍 Checking GitHub folder structure and generating meta.json updates...</p>';
         
-        if (mainCategory === 'concepts') {
-            metaUpdatesHTML = this.generateConceptsMetaUpdates(subcategory);
-        } else if (mainCategory === 'research') {
-            metaUpdatesHTML = this.generateResearchMetaUpdates(subcategory);
-        } else {
-            metaUpdatesHTML = '<p style="color: #ef4444;">Path must start with "concepts/" or "research/"</p>';
+        try {
+            let metaUpdatesHTML = '';
+            
+            if (mainCategory === 'concepts') {
+                metaUpdatesHTML = await this.generateEnhancedConceptsMetaUpdates(subcategory);
+            } else if (mainCategory === 'research') {
+                metaUpdatesHTML = await this.generateEnhancedResearchMetaUpdates(subcategory);
+            } else {
+                metaUpdatesHTML = '<p style="color: #ef4444;">Path must start with "concepts/" or "research/"</p>';
+            }
+            
+            document.getElementById('metaPreview').innerHTML = metaUpdatesHTML;
+        } catch (error) {
+            console.error('Error generating meta updates:', error);
+            document.getElementById('metaPreview').innerHTML = `
+                <p style="color: #ef4444;">Error checking GitHub structure: ${error.message}</p>
+                <p style="color: #666; font-size: 0.9rem;">Generating basic meta.json updates without folder verification...</p>
+                ${this.generateBasicMetaUpdates(mainCategory, subcategory)}
+            `;
         }
-        
-        document.getElementById('metaPreview').innerHTML = metaUpdatesHTML;
     }
 
-    generateConceptsMetaUpdates(subcategory) {
+    async checkGitHubFolderExists(folderPath) {
+        try {
+            // Check if folder exists on GitHub
+            const response = await fetch(`https://api.github.com/repos/UAM-CPrA/QuantumInsights/contents/${folderPath}`);
+            return response.ok;
+        } catch (error) {
+            console.warn('GitHub API check failed:', error);
+            return false; // Assume folder doesn't exist if API fails
+        }
+    }
+
+    async checkGitHubFileExists(filePath) {
+        try {
+            // Check if file exists on GitHub
+            const response = await fetch(`https://api.github.com/repos/UAM-CPrA/QuantumInsights/contents/${filePath}`);
+            return response.ok;
+        } catch (error) {
+            console.warn('GitHub API check failed:', error);
+            return false; // Assume file doesn't exist if API fails
+        }
+    }
+
+    async generateEnhancedConceptsMetaUpdates(subcategory) {
         const title = this.formData.documentTitle || '[Your Title]';
         const description = this.formData.documentDescription || '[Your Description]';
         const level = this.formData.documentLevel || 'Beginner';
-        const featuredElements = this.formData.featuredElements || [];
-        const conceptName = this.formData.conceptName || title;
+        const featuredElements = this.featuredElements || [];
         const readingTime = parseInt(this.formData.readingTime) || 10;
-        const filename = this.extractFilenameFromPath(this.formData.customPath) || this.generateFilename();
         
-        const metaUpdate = {
+        // Generate the meta entry for this specific article
+        const metaEntry = {
+            id: this.generateIdFromTitle(title),
             title: title,
-            concept: conceptName,
+            type: "page",
+            path: this.formData.customPath,
+            url: this.formData.customPath,
             description: description,
             level: level,
             readingTime: readingTime,
-            file: filename,
-            featured: featuredElements.length > 0 ? featuredElements : false,
             tags: this.generateTags(),
+            featured: featuredElements.length > 0 ? featuredElements : ["basic"],
             lastUpdated: new Date().toISOString().split('T')[0]
         };
 
-        let html = '';
-        
-        if (subcategory) {
-            // Need to update TWO meta.json files
-            html += `
-            <div style="margin-bottom: 2rem;">
-                <h4 style="color: var(--blue); margin-bottom: 0.5rem;">🎯 File 1: concepts/${subcategory}/meta.json</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Add this entry to the "items" array:</p>
-                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
-${JSON.stringify(metaUpdate, null, 2)}
-                </div>
-            </div>`;
+        let html = '<div style="margin-bottom: 2rem;">';
+        html += '<h4 style="color: var(--blue); margin-bottom: 1rem;">📋 Required Meta.json Updates</h4>';
 
-            // Check if this subcategory needs to be added to main concepts meta.json
-            html += `
-            <div style="margin-bottom: 2rem;">
-                <h4 style="color: var(--blue); margin-bottom: 0.5rem;">📂 File 2: concepts/meta.json</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
-                    If "${subcategory}" section doesn't exist, add this to the "sections" array:
-                </p>
-                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
-{
-  "id": "${subcategory}",
-  "name": "${this.capitalizeName(subcategory)}",
-  "description": "Description for ${subcategory} concepts",
-  "icon": "🎯"
-}
-                </div>
-                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
-                    ⚠️ Only add this if the "${subcategory}" section doesn't already exist in concepts/meta.json
-                </p>
-            </div>`;
+        if (subcategory) {
+            // Check if subcategory folder exists
+            const subcategoryPath = `concepts/${subcategory}`;
+            const subcategoryExists = await this.checkGitHubFolderExists(subcategoryPath);
+            const subcategoryMetaExists = await this.checkGitHubFileExists(`${subcategoryPath}/meta.json`);
+            
+            if (!subcategoryExists) {
+                // Need to create the entire folder structure
+                html += this.generateFolderCreationInstructions(subcategoryPath, subcategory);
+                
+                // FIRST: Add the new section to parent meta.json
+                html += this.generateNewSectionForParentMeta(subcategory);
+                
+                // SECOND: Add the article to parent meta.json section
+                html += await this.generateMainConceptsMetaUpdate(subcategory);
+                
+                // THIRD: Create the subcategory meta.json
+                html += this.generateSubcategoryMetaJson(subcategory, metaEntry);
+            } else if (!subcategoryMetaExists) {
+                // Folder exists but no meta.json - create meta.json and update parent
+                html += await this.generateMainConceptsMetaUpdate(subcategory);
+                html += this.generateSubcategoryMetaJson(subcategory, metaEntry);
+            } else {
+                // Both exist - just add to existing files
+                html += await this.generateMainConceptsMetaUpdate(subcategory);
+                html += this.generateSubcategoryMetaUpdate(subcategory, metaEntry);
+            }
+            
         } else {
-            // Direct file in concepts/ directory
-            html += `
-            <div style="margin-bottom: 2rem;">
-                <h4 style="color: var(--blue); margin-bottom: 0.5rem;">📂 File: concepts/meta.json</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Add this entry to the "items" array:</p>
-                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
-${JSON.stringify(metaUpdate, null, 2)}
-                </div>
-            </div>`;
+            // Direct in concepts folder - just update main meta.json
+            html += this.generateMainConceptsDirectUpdate(metaEntry);
         }
 
+        html += '</div>';
         return html;
     }
 
-    generateResearchMetaUpdates(subcategory) {
+    async generateEnhancedResearchMetaUpdates(subcategory) {
         const title = this.formData.documentTitle || '[Your Title]';
         const description = this.formData.documentDescription || '[Your Description]';
-        const featuredElements = this.formData.featuredElements || [];
-        const authors = this.formData.authors ? this.formData.authors.split(',').map(author => author.trim()) : ['Author Name'];
-        const venue = this.formData.venue || '[Conference/Journal]';
-        const category = this.formData.category || 'Algorithm';
+        const authors = this.formData.authors || '[Authors]';
+        const venue = this.formData.venue || '[Venue]';
+        const category = this.formData.category || 'Research';
         const framework = this.formData.framework || '[Framework]';
-        const filename = this.extractFilenameFromPath(this.formData.customPath) || this.generateFilename();
+        const featuredElements = this.featuredElements || [];
         
-        const metaUpdate = {
+        // Generate the meta entry for this research article
+        const metaEntry = {
+            id: this.generateIdFromTitle(title),
             title: title,
-            authors: authors,
-            venue: venue,
+            type: "page",
+            path: this.formData.customPath,
+            url: this.formData.customPath,
             description: description,
+            authors: authors.split(',').map(a => a.trim()),
+            venue: venue,
             category: category,
             framework: framework,
-            file: filename,
-            featured: featuredElements.length > 0 ? featuredElements : false,
             tags: this.generateTags(),
+            featured: featuredElements.length > 0 ? featuredElements : ["research"],
             lastUpdated: new Date().toISOString().split('T')[0]
         };
 
-        let html = '';
-        
-        if (subcategory) {
-            // Need to update TWO meta.json files
-            html += `
-            <div style="margin-bottom: 2rem;">
-                <h4 style="color: var(--blue); margin-bottom: 0.5rem;">🔬 File 1: research/${subcategory}/meta.json</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Add this entry to the "items" array:</p>
-                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
-${JSON.stringify(metaUpdate, null, 2)}
-                </div>
-            </div>`;
+        let html = '<div style="margin-bottom: 2rem;">';
+        html += '<h4 style="color: var(--blue); margin-bottom: 1rem;">📋 Required Meta.json Updates</h4>';
 
-            // Check if this subcategory needs to be added to main research meta.json
-            html += `
-            <div style="margin-bottom: 2rem;">
-                <h4 style="color: var(--blue); margin-bottom: 0.5rem;">📂 File 2: research/meta.json</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
-                    If "${subcategory}" section doesn't exist, add this to the "sections" array:
-                </p>
-                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
-{
-  "id": "${subcategory}",
-  "name": "${this.capitalizeName(subcategory)}",
-  "description": "Description for ${subcategory} research",
-  "icon": "🔬"
-}
-                </div>
-                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
-                    ⚠️ Only add this if the "${subcategory}" section doesn't already exist in research/meta.json
-                </p>
-            </div>`;
+        if (subcategory) {
+            // Check if subcategory folder exists
+            const subcategoryPath = `research/${subcategory}`;
+            const subcategoryExists = await this.checkGitHubFolderExists(subcategoryPath);
+            const subcategoryMetaExists = await this.checkGitHubFileExists(`${subcategoryPath}/meta.json`);
+            
+            if (!subcategoryExists) {
+                // Need to create the entire folder structure
+                html += this.generateFolderCreationInstructions(subcategoryPath, subcategory);
+                
+                // FIRST: Add the new section to parent meta.json
+                html += this.generateNewResearchSectionForParentMeta(subcategory);
+                
+                // SECOND: Add the article to parent meta.json section
+                html += await this.generateMainResearchMetaUpdate(subcategory);
+                
+                // THIRD: Create the subcategory meta.json
+                html += this.generateResearchSubcategoryMetaJson(subcategory, metaEntry);
+            } else if (!subcategoryMetaExists) {
+                // Folder exists but no meta.json - create meta.json and update parent
+                html += await this.generateMainResearchMetaUpdate(subcategory);
+                html += this.generateResearchSubcategoryMetaJson(subcategory, metaEntry);
+            } else {
+                // Both exist - just add to existing files
+                html += await this.generateMainResearchMetaUpdate(subcategory);
+                html += this.generateResearchSubcategoryMetaUpdate(subcategory, metaEntry);
+            }
+            
         } else {
-            // Direct file in research/ directory
-            html += `
-            <div style="margin-bottom: 2rem;">
-                <h4 style="color: var(--blue); margin-bottom: 0.5rem;">📂 File: research/meta.json</h4>
-                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">Add this entry to the "items" array:</p>
-                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
-${JSON.stringify(metaUpdate, null, 2)}
-                </div>
-            </div>`;
+            // Direct in research folder - just update main meta.json
+            html += this.generateMainResearchDirectUpdate(metaEntry);
         }
 
+        html += '</div>';
         return html;
+    }
+
+    generateFolderCreationInstructions(folderPath, folderName) {
+        return `
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <h5 style="color: #856404; margin-bottom: 0.5rem;">🗂️ Folder Creation Required</h5>
+                <p style="color: #856404; margin-bottom: 1rem;">
+                    The folder <strong>${folderPath}</strong> doesn't exist yet. You need to create it first.
+                </p>
+                <p style="color: #856404; font-size: 0.9rem;">
+                    Create the following folders: <strong>${folderPath}</strong>
+                </p>
+            </div>
+        `;
+    }
+
+    generateSubcategoryMetaJson(subcategory, articleEntry) {
+        const subcategoryMeta = {
+            title: this.capitalizeName(subcategory),
+            description: `Comprehensive collection of ${subcategory} content.`,
+            type: "folder",
+            parentPath: "concepts",
+            items: [articleEntry],
+            metadata: {
+                lastUpdated: new Date().toISOString().split('T')[0],
+                version: "1.0",
+                totalArticles: 1,
+                structure: "folder"
+            }
+        };
+
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">3️⃣ Create New File: concepts/${subcategory}/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    <strong>Finally</strong>, create this entire meta.json file for the new subcategory:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; max-height: 300px; overflow-y: auto;">
+${JSON.stringify(subcategoryMeta, null, 2)}
+                </div>
+            </div>
+        `;
+    }
+
+    generateResearchSubcategoryMetaJson(subcategory, articleEntry) {
+        const subcategoryMeta = {
+            title: this.capitalizeName(subcategory) + " Research",
+            description: `Research papers and implementations for ${subcategory}.`,
+            type: "folder",
+            parentPath: "research",
+            items: [articleEntry],
+            metadata: {
+                lastUpdated: new Date().toISOString().split('T')[0],
+                version: "1.0",
+                totalArticles: 1,
+                structure: "folder"
+            }
+        };
+
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">3️⃣ Create New File: research/${subcategory}/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    <strong>Finally</strong>, create this entire meta.json file for the new research subcategory:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; max-height: 300px; overflow-y: auto;">
+${JSON.stringify(subcategoryMeta, null, 2)}
+                </div>
+            </div>
+        `;
+    }
+
+    generateSubcategoryMetaUpdate(subcategory, articleEntry) {
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">✏️ Update File: concepts/${subcategory}/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    Add this entry to the "items" array in the existing meta.json file:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; max-height: 200px; overflow-y: auto;">
+${JSON.stringify(articleEntry, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Add a comma after the previous entry if it's not the last item in the array.
+                </p>
+            </div>
+        `;
+    }
+
+    generateResearchSubcategoryMetaUpdate(subcategory, articleEntry) {
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">✏️ Update File: research/${subcategory}/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    Add this entry to the "items" array in the existing meta.json file:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; max-height: 200px; overflow-y: auto;">
+${JSON.stringify(articleEntry, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Add a comma after the previous entry if it's not the last item in the array.
+                </p>
+            </div>
+        `;
+    }
+
+    generateNewSectionForParentMeta(subcategory) {
+        const subcategorySection = {
+            id: subcategory,
+            title: this.capitalizeName(subcategory),
+            icon: this.getIconForSubcategory(subcategory),
+            type: "folder",
+            path: `concepts/${subcategory}`,
+            url: `concepts/${subcategory}.html`,
+            description: `Explore ${subcategory} concepts and implementations.`,
+            children: []
+        };
+
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">1️⃣ Update File: concepts/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    <strong>First</strong>, add this new section to the main "sections" array:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+${JSON.stringify(subcategorySection, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Add this to the "sections" array in concepts/meta.json (after the last existing section)
+                </p>
+            </div>
+        `;
+    }
+
+    async generateMainConceptsMetaUpdate(subcategory) {
+        // Check if this subcategory exists in main concepts meta.json
+        const conceptsMetaExists = await this.checkGitHubFileExists('concepts/meta.json');
+        
+        if (!conceptsMetaExists) {
+            return `
+                <div style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <h5 style="color: #721c24; margin-bottom: 0.5rem;">⚠️ Warning: Main concepts/meta.json not found</h5>
+                    <p style="color: #721c24;">
+                        The main concepts/meta.json file doesn't exist. This is unusual and may require manual setup.
+                    </p>
+                </div>
+            `;
+        }
+
+        // Generate the article entry that should be added to the parent meta.json
+        const title = this.formData.documentTitle || '[Your Title]';
+        const description = this.formData.documentDescription || '[Your Description]';
+        const level = this.formData.documentLevel || 'Beginner';
+        const readingTime = parseInt(this.formData.readingTime) || 10;
+        const featuredElements = this.featuredElements || [];
+        
+        const parentMetaEntry = {
+            id: this.generateIdFromTitle(title),
+            title: title,
+            type: "page",
+            path: this.formData.customPath,
+            url: this.formData.customPath,
+            description: description,
+            level: level,
+            readingTime: readingTime,
+            tags: this.generateTags(),
+            featured: featuredElements.length > 0 ? featuredElements : ["basic"],
+            lastUpdated: new Date().toISOString().split('T')[0]
+        };
+
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">2️⃣ Update File: concepts/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    <strong>Second</strong>, add this entry to the <strong>"${subcategory}"</strong> section's "children" array:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+${JSON.stringify(parentMetaEntry, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Find the section with id "${subcategory}" and add this to its "children" array. Add a comma after the previous entry if it's not the last item.
+                </p>
+            </div>
+        `;
+    }
+
+    generateNewResearchSectionForParentMeta(subcategory) {
+        const subcategorySection = {
+            id: subcategory,
+            title: this.capitalizeName(subcategory) + " Research",
+            icon: this.getIconForSubcategory(subcategory),
+            type: "section",
+            description: `Research papers and implementations for ${subcategory}.`,
+            children: []
+        };
+
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">1️⃣ Update File: research/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    <strong>First</strong>, add this new section to the main "sections" array:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+${JSON.stringify(subcategorySection, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Add this to the "sections" array in research/meta.json (after the last existing section)
+                </p>
+            </div>
+        `;
+    }
+
+    async generateMainResearchMetaUpdate(subcategory) {
+        // Generate the article entry that should be added to the parent meta.json
+        const title = this.formData.documentTitle || '[Your Title]';
+        const description = this.formData.documentDescription || '[Your Description]';
+        const authors = this.formData.authors || '[Authors]';
+        const venue = this.formData.venue || '[Venue]';
+        const category = this.formData.category || 'Research';
+        const framework = this.formData.framework || '[Framework]';
+        const featuredElements = this.featuredElements || [];
+        
+        const parentMetaEntry = {
+            id: this.generateIdFromTitle(title),
+            title: title,
+            type: "page",
+            path: this.formData.customPath,
+            url: this.formData.customPath,
+            description: description,
+            authors: authors.split(',').map(a => a.trim()),
+            venue: venue,
+            category: category,
+            framework: framework,
+            tags: this.generateTags(),
+            featured: featuredElements.length > 0 ? featuredElements : ["research"],
+            lastUpdated: new Date().toISOString().split('T')[0]
+        };
+
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">2️⃣ Update File: research/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    <strong>Second</strong>, add this entry to the <strong>"${subcategory}"</strong> section's "children" array:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem; max-height: 250px; overflow-y: auto;">
+${JSON.stringify(parentMetaEntry, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Find the section with id "${subcategory}" and add this to its "children" array. Add a comma after the previous entry if it's not the last item.
+                </p>
+            </div>
+        `;
+    }
+
+    generateMainConceptsDirectUpdate(articleEntry) {
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">✏️ Update File: concepts/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    Add this entry to the appropriate section's "children" array:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+${JSON.stringify(articleEntry, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Find the most appropriate section (fundamentals, algorithms, etc.) and add to its "children" array.
+                </p>
+            </div>
+        `;
+    }
+
+    generateMainResearchDirectUpdate(articleEntry) {
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">✏️ Update File: research/meta.json</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    Add this entry to the appropriate section's "children" array:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+${JSON.stringify(articleEntry, null, 2)}
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #888;">
+                    ⚠️ Find the most appropriate section and add to its "children" array.
+                </p>
+            </div>
+        `;
+    }
+
+    getIconForSubcategory(subcategory) {
+        const icons = {
+            'algorithms': '⚡',
+            'fundamentals': '🧠',
+            'quantum-gates': '🚪',
+            'applications': '🚀',
+            'hardware': '🔧',
+            'theory': '📚',
+            'cryptography': '🔐',
+            'optimization': '📊',
+            'machine-learning': '🤖',
+            'simulation': '💻'
+        };
+        return icons[subcategory] || '📄';
+    }
+
+    generateBasicMetaUpdates(mainCategory, subcategory) {
+        // Fallback for when GitHub API is not available
+        const title = this.formData.documentTitle || '[Your Title]';
+        const description = this.formData.documentDescription || '[Your Description]';
+        
+        const basicEntry = {
+            id: this.generateIdFromTitle(title),
+            title: title,
+            type: "page",
+            path: this.formData.customPath,
+            url: this.formData.customPath,
+            description: description,
+            lastUpdated: new Date().toISOString().split('T')[0]
+        };
+
+        return `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: var(--blue); margin-bottom: 0.5rem;">📝 Basic Meta.json Update</h5>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #666;">
+                    Add this entry to ${mainCategory}${subcategory ? `/${subcategory}` : ''}/meta.json:
+                </p>
+                <div style="background: var(--dark-text); color: var(--white); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
+${JSON.stringify(basicEntry, null, 2)}
+                </div>
+            </div>
+        `;
     }
 
     capitalizeName(name) {
         return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
+    }
+
+    generateIdFromTitle(title) {
+        return title.toLowerCase()
+                   .replace(/[^a-z0-9\s-]/g, '')
+                   .replace(/\s+/g, '-')
+                   .replace(/-+/g, '-')
+                   .trim();
     }
 
     generateFilename() {

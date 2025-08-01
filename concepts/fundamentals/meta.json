@@ -1,37 +1,119 @@
 {
   "title": "Fundamental Concepts",
   "description": "Core principles of quantum mechanics and quantum information theory.",
-  "concepts": [
+  "type": "folder",
+  "parentPath": "concepts",
+  "items": [
     {
       "id": "quantum-mechanics-basics",
       "title": "Quantum Mechanics Basics",
-      "description": "Understanding quantum computing starts with grasping the fundamental principles of quantum mechanics that make quantum computation possible.",
-      "details": {
-        "wave_particle_duality": {
+      "type": "page",
+      "path": "concepts/fundamentals/quantum-mechanics-basics.html",
+      "url": "concepts/fundamentals/quantum-mechanics-basics.html",
+      "description": "Understanding quantum computing starts with grasping the fundamental principles of quantum mechanics.",
+      "level": "Beginner",
+      "readingTime": 15,
+      "tags": ["fundamentals", "quantum-mechanics", "basics"],
+      "featured": ["math", "interactive"],
+      "lastUpdated": "2025-01-15",
+      "concepts": [
+        {
           "title": "Wave-Particle Duality",
           "description": "Learn how quantum objects exhibit both wave and particle properties, forming the foundation of quantum behavior.",
           "mathematical_foundation": "de Broglie wavelength: λ = h/p",
           "applications": ["Electron diffraction", "Photon behavior", "Matter waves"]
         },
-        "uncertainty_principle": {
+        {
           "title": "Uncertainty Principle",
           "description": "Explore Heisenberg's uncertainty principle and its implications for quantum information processing.",
           "mathematical_foundation": "ΔxΔp ≥ ℏ/2",
           "applications": ["Measurement limits", "Quantum cryptography", "No-cloning theorem"]
         },
-        "quantum_states": {
+        {
           "title": "Quantum States",
           "description": "Understand how quantum systems are described by state vectors in complex vector spaces.",
           "mathematical_foundation": "|ψ⟩ = α|0⟩ + β|1⟩ where |α|² + |β|² = 1",
           "applications": ["State preparation", "Quantum algorithms", "Quantum simulation"]
         },
-        "probability_amplitudes": {
+        {
           "title": "Probability Amplitudes",
           "description": "Discover how quantum probabilities arise from complex amplitudes and Born's rule.",
           "mathematical_foundation": "P(outcome) = |⟨outcome|ψ⟩|²",
           "applications": ["Measurement outcomes", "Quantum interference", "Algorithm design"]
         }
-      }
+      ]
+    },
+    {
+      "id": "qubits-superposition",
+      "title": "Qubits & Superposition", 
+      "type": "page",
+      "path": "concepts/fundamentals/qubits-superposition.html",
+      "url": "concepts/fundamentals/qubits-superposition.html",
+      "description": "The quantum bit (qubit) is the fundamental unit of quantum information, capable of existing in superposition states.",
+      "level": "Beginner",
+      "readingTime": 12,
+      "tags": ["qubits", "superposition", "bloch-sphere"],
+      "featured": ["interactive", "video"],
+      "lastUpdated": "2025-01-10",
+      "concepts": [
+        {
+          "title": "Bloch Sphere",
+          "description": "Visualize qubit states using the Bloch sphere representation and understand geometric interpretations.",
+          "mathematical_foundation": "|ψ⟩ = cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩",
+          "applications": ["State visualization", "Gate operations", "Quantum control"]
+        },
+        {
+          "title": "Superposition States",
+          "description": "Learn how qubits can exist in combinations of |0⟩ and |1⟩ states simultaneously.",
+          "mathematical_foundation": "|+⟩ = (|0⟩ + |1⟩)/√2, |-⟩ = (|0⟩ - |1⟩)/√2",
+          "applications": ["Quantum parallelism", "Interference", "Algorithm design"]
+        },
+        {
+          "title": "Quantum Interference",
+          "description": "Explore how quantum amplitudes can interfere constructively or destructively.",
+          "mathematical_foundation": "Amplitude addition: α₁ + α₂ → |α₁ + α₂|²",
+          "applications": ["Algorithm optimization", "Error correction", "Quantum speedup"]
+        }
+      ]
+    },
+    {
+      "id": "entanglement",
+      "title": "Quantum Entanglement",
+      "type": "page", 
+      "path": "concepts/fundamentals/entanglement.html",
+      "url": "concepts/fundamentals/entanglement.html",
+      "description": "Explore the mysterious quantum phenomenon that Einstein called 'spooky action at a distance'.",
+      "level": "Intermediate",
+      "readingTime": 18,
+      "tags": ["entanglement", "non-locality", "bell-states"],
+      "featured": ["math", "interactive"],
+      "lastUpdated": "2025-01-08",
+      "concepts": [
+        {
+          "title": "Bell States",
+          "description": "Study the four maximally entangled two-qubit states that form the foundation of quantum protocols.",
+          "mathematical_foundation": "|Φ±⟩ = (|00⟩ ± |11⟩)/√2, |Ψ±⟩ = (|01⟩ ± |10⟩)/√2",
+          "applications": ["Quantum teleportation", "Quantum cryptography", "Dense coding"]
+        },
+        {
+          "title": "Non-locality",
+          "description": "Understand how entangled particles exhibit correlations that violate local realism.",
+          "mathematical_foundation": "Bell inequality: |E(a,b) - E(a,c)| ≤ 1 + E(b,c)",
+          "applications": ["Quantum advantage", "Security proofs", "Fundamental tests"]
+        },
+        {
+          "title": "Entanglement Measures",
+          "description": "Explore mathematical tools to quantify and characterize entanglement in quantum systems.",
+          "mathematical_foundation": "Concurrence: C(ρ) = max(0, λ₁ - λ₂ - λ₃ - λ₄)",
+          "applications": ["Resource quantification", "Protocol design", "Error analysis"]
+        }
+      ]
     }
-  ]
+  ],
+  "metadata": {
+    "lastUpdated": "2025-01-31",
+    "version": "2.0",
+    "totalItems": 3,
+    "structure": "hierarchical"
+  }
 }

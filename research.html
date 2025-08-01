@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research & Code Implementation - CPrA QuantumInsights</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="_img/favicon.svg">
     <style>
         :root {
             --fresh-green: #4ade80;
@@ -391,7 +391,7 @@
     <nav class="top-nav">
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <img src="favicon.svg" alt="CPrA Logo" class="nav-logo-icon">
+                <img src="_img/favicon.svg" alt="CPrA Logo" class="nav-logo-icon">
                 <div class="logo-text">
                     <span class="logo-title">Quantum Insights</span>
                     <span class="logo-subtitle">By CPrA</span>
@@ -433,7 +433,7 @@
         <div class="footer-content">
             <p>&copy; 2025 CPrA QuantumInsights. Advancing quantum education and research.</p>
             <span class="by-text">by</span>
-            <img src="favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
+            <img src="_img/favicon.svg" alt="CPrA Logo" class="cpra-logo-small">
         </div>
     </footer>
 
@@ -456,14 +456,79 @@
                 const existingSections = content.querySelectorAll('.research-section');
                 existingSections.forEach(section => section.remove());
                 
-                // Generate sidebar navigation
+                // Generate sidebar navigation with new hierarchical format
                 generateSidebarNavigation(data.sections, sidebarNav);
                 
-                // Generate main content sections
+                // Generate main content sections with new format
                 generateMainContent(data.sections, content);
+                
+                console.log('Loaded research data:', data);
                 
             } catch (error) {
                 console.error('Error loading research data:', error);
+                // Fallback error display
+                const content = document.querySelector('.content');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.padding = '2rem';
+                errorDiv.style.textAlign = 'center';
+                errorDiv.style.color = '#ef4444';
+                errorDiv.innerHTML = `
+                    <h2>Error Loading Content</h2>
+                    <p>Failed to load research data. Please check the console for details.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+                content.appendChild(errorDiv);
+            }
+        }
+
+        // Load folder content (similar to concepts.html)
+        async function loadFolderContent(folderPath) {
+            try {
+                const metaPath = `${folderPath}/meta.json`;
+                const response = await fetch(metaPath);
+                const data = await response.json();
+                
+                // Update page title and description
+                document.querySelector('.content-header h1').textContent = data.title;
+                document.querySelector('.content-header p').textContent = data.description;
+                
+                // Clear existing content
+                const sidebarNav = document.querySelector('.sidebar-nav');
+                const content = document.querySelector('.content');
+                
+                // Keep the header but remove existing sections
+                const existingSections = content.querySelectorAll('.research-section');
+                existingSections.forEach(section => section.remove());
+                
+                // Generate navigation for folder items
+                generateFolderNavigation(data.items, sidebarNav);
+                
+                // Generate main content for folder items
+                generateFolderContent(data.items, content);
+                
+                // Update URL without page reload
+                const newUrl = `${window.location.pathname}?folder=${encodeURIComponent(folderPath)}`;
+                window.history.pushState({folderPath: folderPath}, '', newUrl);
+                
+                console.log('Loaded folder content:', data);
+                
+            } catch (error) {
+                console.error('Error loading folder content:', error);
+                // Fallback error display
+                const content = document.querySelector('.content');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.padding = '2rem';
+                errorDiv.style.textAlign = 'center';
+                errorDiv.style.color = '#ef4444';
+                errorDiv.innerHTML = `
+                    <h2>Error Loading Folder Content</h2>
+                    <p>Failed to load folder data from ${folderPath}. Please check the console for details.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <button onclick="loadResearchData()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--blue); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Return to Main Research
+                    </button>
+                `;
+                content.appendChild(errorDiv);
             }
         }
 
@@ -479,13 +544,52 @@
                 sectionTitle.textContent = section.title;
                 navSection.appendChild(sectionTitle);
                 
-                section.items.forEach((item, index) => {
-                    const navItem = document.createElement('a');
-                    navItem.href = `#${item.id}`;
-                    navItem.className = `nav-item ${index === 0 && section.id === 'algorithm-papers' ? 'active' : ''}`;
-                    navItem.textContent = item.title;
-                    navSection.appendChild(navItem);
-                });
+                // Add children as nav items (new hierarchical format)
+                if (section.children && section.children.length > 0) {
+                    section.children.forEach((child, index) => {
+                        const navItem = document.createElement('a');
+                        navItem.href = child.url || `#${child.id}`;
+                        navItem.className = `nav-item ${index === 0 && section.id === 'algorithm-papers' ? 'active' : ''}`;
+                        navItem.textContent = child.title;
+                        
+                        // Add click handler for navigation items
+                        navItem.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            
+                            if (child.type === 'folder') {
+                                // Load folder content
+                                loadFolderContent(child.path);
+                            } else if (child.type === 'page') {
+                                // Navigate directly to the HTML file using safe navigation
+                                if (window.quantumNavigate) {
+                                    window.quantumNavigate(child.path || child.url);
+                                } else {
+                                    window.location.href = child.path || child.url;
+                                }
+                            }
+                        });
+                        
+                        // Add subtle metadata in navigation
+                        if (child.level || child.readingTime || child.featured) {
+                            const metadata = document.createElement('div');
+                            metadata.className = 'nav-item-metadata';
+                            metadata.style.fontSize = '0.75rem';
+                            metadata.style.color = '#9ca3af';
+                            metadata.style.marginTop = '0.2rem';
+                            metadata.style.opacity = '0.8';
+                            
+                            const metaParts = [];
+                            if (child.level) metaParts.push(child.level);
+                            if (child.readingTime) metaParts.push(`${child.readingTime}min`);
+                            if (child.featured) metaParts.push('★');
+                            
+                            metadata.textContent = metaParts.join(' • ');
+                            navItem.appendChild(metadata);
+                        }
+                        
+                        navSection.appendChild(navItem);
+                    });
+                }
                 
                 container.appendChild(navSection);
             });
@@ -495,98 +599,644 @@
             const header = container.querySelector('.content-header');
             
             sections.forEach(section => {
-                section.items.forEach(item => {
-                    const researchSection = document.createElement('section');
-                    researchSection.className = 'research-section';
-                    researchSection.id = item.id;
+                // Create research section for each main section
+                const researchSection = document.createElement('section');
+                researchSection.className = 'research-section';
+                researchSection.id = section.id;
+                
+                const sectionHeader = document.createElement('h2');
+                sectionHeader.innerHTML = `<span class="section-icon">${getIconForSection(section.id)}</span>${section.title}`;
+                
+                const description = document.createElement('p');
+                description.textContent = section.description;
+                
+                researchSection.appendChild(sectionHeader);
+                researchSection.appendChild(description);
+                
+                // Convert children to paper format (like original)
+                if (section.children && section.children.length > 0) {
+                    const paperGrid = document.createElement('div');
+                    paperGrid.className = 'paper-grid';
                     
-                    const sectionHeader = document.createElement('h2');
-                    sectionHeader.innerHTML = `<span class="section-icon">${getIconForSection(section.id)}</span>${item.title}`;
-                    
-                    const description = document.createElement('p');
-                    description.textContent = item.description;
-                    
-                    researchSection.appendChild(sectionHeader);
-                    researchSection.appendChild(description);
-                    
-                    if (item.papers && item.papers.length > 0) {
-                        const paperGrid = document.createElement('div');
-                        paperGrid.className = 'paper-grid';
+                    section.children.forEach(child => {
+                        const paperCard = document.createElement('div');
+                        paperCard.className = 'paper-card';
                         
-                        item.papers.forEach(paper => {
-                            const paperCard = document.createElement('div');
-                            paperCard.className = 'paper-card';
+                        const paperTitle = document.createElement('div');
+                        paperTitle.className = 'paper-title';
+                        paperTitle.textContent = child.title;
+                        
+                        const paperDescription = document.createElement('p');
+                        paperDescription.textContent = child.description;
+                        
+                        paperCard.appendChild(paperTitle);
+                        
+                        // Add venue/source badge if available
+                        if (child.venue || child.source) {
+                            const venueBadge = document.createElement('div');
+                            venueBadge.className = 'paper-venue';
+                            venueBadge.textContent = child.venue || child.source;
+                            venueBadge.style.background = 'var(--fresh-green)';
+                            venueBadge.style.color = 'var(--white)';
+                            venueBadge.style.padding = '0.2rem 0.8rem';
+                            venueBadge.style.borderRadius = '12px';
+                            venueBadge.style.fontSize = '0.8rem';
+                            venueBadge.style.display = 'inline-block';
+                            venueBadge.style.marginBottom = '1rem';
+                            venueBadge.style.fontWeight = '500';
+                            paperCard.appendChild(venueBadge);
+                        }
+                        
+                        // Add "Own research" badge if specified
+                        if (child.ownResearch) {
+                            const ownResearchBadge = document.createElement('div');
+                            ownResearchBadge.className = 'paper-venue';
+                            ownResearchBadge.textContent = 'Own Research';
+                            ownResearchBadge.style.background = 'var(--blue)';
+                            ownResearchBadge.style.color = 'var(--white)';
+                            ownResearchBadge.style.padding = '0.2rem 0.8rem';
+                            ownResearchBadge.style.borderRadius = '12px';
+                            ownResearchBadge.style.fontSize = '0.8rem';
+                            ownResearchBadge.style.display = 'inline-block';
+                            ownResearchBadge.style.marginBottom = '1rem';
+                            ownResearchBadge.style.fontWeight = '500';
+                            ownResearchBadge.style.marginLeft = '0.5rem';
+                            paperCard.appendChild(ownResearchBadge);
+                        }
+                        
+                        paperCard.appendChild(paperDescription);
+                        
+                        // Add the metadata section (keeping the cool labels)
+                        if (child.level || child.readingTime || child.featured || (child.tags && child.tags.length > 0)) {
+                            const metadata = document.createElement('div');
+                            metadata.className = 'research-metadata';
+                            metadata.style.marginTop = '1rem';
+                            metadata.style.display = 'flex';
+                            metadata.style.flexWrap = 'wrap';
+                            metadata.style.gap = '0.5rem';
+                            metadata.style.fontSize = '0.8rem';
                             
-                            const paperTitle = document.createElement('div');
-                            paperTitle.className = 'paper-title';
-                            paperTitle.textContent = paper.title;
-                            
-                            const paperAuthors = document.createElement('div');
-                            paperAuthors.className = 'paper-authors';
-                            paperAuthors.textContent = paper.authors;
-                            
-                            const paperVenue = document.createElement('div');
-                            paperVenue.className = 'paper-venue';
-                            paperVenue.textContent = paper.venue;
-                            
-                            const paperDescription = document.createElement('p');
-                            paperDescription.textContent = paper.description;
-                            
-                            paperCard.appendChild(paperTitle);
-                            paperCard.appendChild(paperAuthors);
-                            paperCard.appendChild(paperVenue);
-                            paperCard.appendChild(paperDescription);
-                            
-                            if (paper.code) {
-                                const codeSection = document.createElement('div');
-                                codeSection.className = 'code-section';
-                                
-                                const codeHeader = document.createElement('div');
-                                codeHeader.className = 'code-header';
-                                
-                                const codeTitle = document.createElement('span');
-                                codeTitle.textContent = paper.code.title;
-                                
-                                const codeLanguage = document.createElement('span');
-                                codeLanguage.className = 'code-language';
-                                codeLanguage.textContent = paper.code.language;
-                                
-                                codeHeader.appendChild(codeTitle);
-                                codeHeader.appendChild(codeLanguage);
-                                
-                                const codeSnippet = document.createElement('pre');
-                                const codeElement = document.createElement('code');
-                                codeElement.textContent = paper.code.snippet;
-                                codeSnippet.appendChild(codeElement);
-                                
-                                codeSection.appendChild(codeHeader);
-                                codeSection.appendChild(codeSnippet);
-                                paperCard.appendChild(codeSection);
+                            // Level badge
+                            if (child.level) {
+                                const levelBadge = document.createElement('span');
+                                levelBadge.textContent = child.level;
+                                levelBadge.style.background = '#e5e7eb';
+                                levelBadge.style.color = '#374151';
+                                levelBadge.style.padding = '0.2rem 0.5rem';
+                                levelBadge.style.borderRadius = '12px';
+                                levelBadge.style.fontWeight = '500';
+                                metadata.appendChild(levelBadge);
                             }
                             
-                            if (paper.github_link) {
-                                const githubLink = document.createElement('a');
-                                githubLink.href = paper.github_link;
-                                githubLink.className = 'github-link';
-                                githubLink.textContent = '🔗 View Full Implementation';
-                                paperCard.appendChild(githubLink);
+                            // Reading time badge
+                            if (child.readingTime) {
+                                const timeBadge = document.createElement('span');
+                                timeBadge.textContent = `${child.readingTime} min read`;
+                                timeBadge.style.background = '#fef3c7';
+                                timeBadge.style.color = '#92400e';
+                                timeBadge.style.padding = '0.2rem 0.5rem';
+                                timeBadge.style.borderRadius = '12px';
+                                timeBadge.style.fontWeight = '500';
+                                metadata.appendChild(timeBadge);
                             }
                             
-                            paperGrid.appendChild(paperCard);
-                        });
+                            // Featured badge
+                            if (child.featured) {
+                                const featuredBadge = document.createElement('span');
+                                featuredBadge.textContent = '★ Featured';
+                                featuredBadge.style.background = '#fbbf24';
+                                featuredBadge.style.color = '#92400e';
+                                featuredBadge.style.padding = '0.2rem 0.5rem';
+                                featuredBadge.style.borderRadius = '12px';
+                                featuredBadge.style.fontWeight = 'bold';
+                                metadata.appendChild(featuredBadge);
+                            }
+                            
+                            // Tags
+                            if (child.tags && child.tags.length > 0) {
+                                child.tags.slice(0, 3).forEach(tag => {
+                                    const tagBadge = document.createElement('span');
+                                    tagBadge.textContent = tag;
+                                    tagBadge.style.background = '#f3f4f6';
+                                    tagBadge.style.color = '#6b7280';
+                                    tagBadge.style.padding = '0.2rem 0.5rem';
+                                    tagBadge.style.borderRadius = '12px';
+                                    tagBadge.style.fontSize = '0.75rem';
+                                    metadata.appendChild(tagBadge);
+                                });
+                            }
+                            
+                            paperCard.appendChild(metadata);
+                        }
                         
-                        researchSection.appendChild(paperGrid);
-                    } else {
-                        // Add placeholder for empty sections
-                        const placeholder = document.createElement('div');
-                        placeholder.className = 'paper-grid';
-                        placeholder.innerHTML = '<div class="paper-card"><p style="text-align: center; opacity: 0.6; font-style: italic;">Content coming soon...</p></div>';
-                        researchSection.appendChild(placeholder);
-                    }
+                        // Add click handler for navigation
+                        if (child.url) {
+                            paperCard.style.cursor = 'pointer';
+                            paperCard.addEventListener('click', async () => {
+                                // Check if it's a folder or specific research item
+                                if (child.type === 'folder') {
+                                    // It's a folder - load the meta.json from that folder
+                                    loadFolderContent(child.path);
+                                } else if (child.type === 'page') {
+                                    // Navigate directly to the HTML file using safe navigation
+                                    if (window.quantumNavigate) {
+                                        window.quantumNavigate(child.path || child.url);
+                                    } else {
+                                        window.location.href = child.path || child.url;
+                                    }
+                                } else {
+                                    // Fallback - just navigate normally
+                                    if (child.url.startsWith('http')) {
+                                        window.open(child.url, '_blank');
+                                    } else {
+                                        window.location.href = child.url;
+                                    }
+                                }
+                            });
+                            
+                            // Add hover effect for clickable cards
+                            paperCard.addEventListener('mouseenter', () => {
+                                paperCard.style.transform = 'translateY(-5px)';
+                                paperCard.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                            });
+                            
+                            paperCard.addEventListener('mouseleave', () => {
+                                paperCard.style.transform = 'translateY(0)';
+                                paperCard.style.boxShadow = 'none';
+                            });
+                        }
+                        
+                        paperGrid.appendChild(paperCard);
+                    });
                     
-                    container.appendChild(researchSection);
-                });
+                    researchSection.appendChild(paperGrid);
+                }
+                
+                container.appendChild(researchSection);
             });
+        }
+
+        // Generate navigation for folder items (similar to concepts.html)
+        function generateFolderNavigation(items, container) {
+            container.innerHTML = '';
+            
+            items.forEach((item, index) => {
+                const navItem = document.createElement('a');
+                navItem.href = item.url || `#${item.id}`;
+                navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
+                navItem.textContent = item.title;
+                
+                // Add click handler for folder navigation
+                navItem.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    
+                    if (item.type === 'folder') {
+                        // Load nested folder content
+                        loadFolderContent(item.path);
+                    } else if (item.type === 'page') {
+                        // Navigate directly to the HTML file using safe navigation
+                        if (window.quantumNavigate) {
+                            window.quantumNavigate(item.path || item.url);
+                        } else {
+                            window.location.href = item.path || item.url;
+                        }
+                    }
+                });
+                
+                // Add metadata in navigation
+                if (item.level || item.readingTime || item.featured) {
+                    const metadata = document.createElement('div');
+                    metadata.className = 'nav-item-metadata';
+                    metadata.style.fontSize = '0.75rem';
+                    metadata.style.color = '#9ca3af';
+                    metadata.style.marginTop = '0.2rem';
+                    metadata.style.opacity = '0.8';
+                    
+                    const metaParts = [];
+                    if (item.level) metaParts.push(item.level);
+                    if (item.readingTime) metaParts.push(`${item.readingTime}min`);
+                    if (item.featured) metaParts.push('★');
+                    
+                    metadata.textContent = metaParts.join(' • ');
+                    navItem.appendChild(metadata);
+                }
+                
+                container.appendChild(navItem);
+            });
+        }
+
+        // Generate main content for folder items (similar to concepts.html)
+        function generateFolderContent(items, container) {
+            const header = container.querySelector('.content-header');
+            
+            // Create a grid for folder items
+            const itemGrid = document.createElement('div');
+            itemGrid.className = 'paper-grid';
+            itemGrid.style.display = 'grid';
+            itemGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(350px, 1fr))';
+            itemGrid.style.gap = '1.5rem';
+            itemGrid.style.marginTop = '2rem';
+            
+            items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'paper-card';
+                itemCard.style.background = 'white';
+                itemCard.style.borderRadius = '10px';
+                itemCard.style.padding = '1.5rem';
+                itemCard.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                itemCard.style.border = '1px solid #e5e7eb';
+                itemCard.style.transition = 'all 0.3s ease';
+                
+                // Add title
+                const title = document.createElement('h3');
+                title.textContent = item.title;
+                title.style.marginBottom = '0.5rem';
+                title.style.color = 'var(--dark-text)';
+                itemCard.appendChild(title);
+                
+                // Add description
+                const description = document.createElement('p');
+                description.textContent = item.description;
+                description.style.fontSize = '0.9rem';
+                description.style.color = '#6b7280';
+                description.style.marginBottom = '1rem';
+                itemCard.appendChild(description);
+                
+                // Add metadata
+                const metadata = document.createElement('div');
+                metadata.className = 'paper-metadata';
+                metadata.style.display = 'flex';
+                metadata.style.flexWrap = 'wrap';
+                metadata.style.gap = '0.5rem';
+                metadata.style.marginBottom = '1rem';
+                
+                // Add level badge
+                if (item.level) {
+                    const levelBadge = document.createElement('span');
+                    levelBadge.className = 'badge';
+                    levelBadge.textContent = item.level;
+                    levelBadge.style.background = item.level === 'Beginner' ? '#10b981' : 
+                                                item.level === 'Intermediate' ? '#f59e0b' : '#ef4444';
+                    levelBadge.style.color = 'white';
+                    levelBadge.style.padding = '0.2rem 0.5rem';
+                    levelBadge.style.borderRadius = '4px';
+                    levelBadge.style.fontSize = '0.75rem';
+                    metadata.appendChild(levelBadge);
+                }
+                
+                // Add reading time
+                if (item.readingTime) {
+                    const timeBadge = document.createElement('span');
+                    timeBadge.className = 'badge';
+                    timeBadge.textContent = `${item.readingTime} min read`;
+                    timeBadge.style.background = '#6b7280';
+                    timeBadge.style.color = 'white';
+                    timeBadge.style.padding = '0.2rem 0.5rem';
+                    timeBadge.style.borderRadius = '4px';
+                    timeBadge.style.fontSize = '0.75rem';
+                    metadata.appendChild(timeBadge);
+                }
+                
+                itemCard.appendChild(metadata);
+                
+                // Add click handler for navigation
+                if (item.url) {
+                    itemCard.style.cursor = 'pointer';
+                    itemCard.addEventListener('click', async () => {
+                        if (item.type === 'folder') {
+                            // Load nested folder content
+                            loadFolderContent(item.path);
+                        } else if (item.type === 'page') {
+                            // Navigate directly to the HTML file using safe navigation
+                            if (window.quantumNavigate) {
+                                window.quantumNavigate(item.path || item.url);
+                            } else {
+                                window.location.href = item.path || item.url;
+                            }
+                        }
+                    });
+                    
+                    // Add hover effect for clickable cards
+                    itemCard.addEventListener('mouseenter', () => {
+                        itemCard.style.transform = 'translateY(-5px)';
+                        itemCard.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                    });
+                    
+                    itemCard.addEventListener('mouseleave', () => {
+                        itemCard.style.transform = 'translateY(0)';
+                        itemCard.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                    });
+                }
+                
+                itemGrid.appendChild(itemCard);
+            });
+            
+            container.appendChild(itemGrid);
+        }
+
+        // Function to load research content within the same page
+        async function loadResearchContent(research) {
+            try {
+                console.log('Loading research content for:', research.title);
+                
+                // Update page title and description with research info
+                document.querySelector('.content-header h1').textContent = research.title;
+                document.querySelector('.content-header p').textContent = research.description;
+                
+                // Update browser history and URL
+                const newUrl = `${window.location.pathname}?research=${encodeURIComponent(research.id)}`;
+                window.history.pushState({ researchId: research.id, research }, research.title, newUrl);
+                
+                // Clear existing content
+                const sidebarNav = document.querySelector('.sidebar-nav');
+                const content = document.querySelector('.content');
+                
+                // Keep the header but remove existing sections
+                const existingSections = content.querySelectorAll('.research-section');
+                existingSections.forEach(section => section.remove());
+                
+                // Generate research content
+                generateResearchContentDisplay(research, content);
+                generateResearchNavigation(research, sidebarNav);
+                
+                console.log('Loaded research:', research);
+                
+            } catch (error) {
+                console.error('Error loading research content:', error);
+                // Show error message
+                const content = document.querySelector('.content');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.padding = '2rem';
+                errorDiv.style.textAlign = 'center';
+                errorDiv.style.color = '#ef4444';
+                errorDiv.innerHTML = `
+                    <h2>Error Loading Research</h2>
+                    <p>Failed to load research content. Please check the console for details.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <button onclick="loadResearchData()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--blue); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Back to Main Page
+                    </button>
+                `;
+                content.appendChild(errorDiv);
+            }
+        }
+
+        // Function to generate research content display
+        function generateResearchContentDisplay(research, container) {
+            const researchSection = document.createElement('section');
+            researchSection.className = 'research-section';
+            
+            // Research header with metadata
+            const researchHeader = document.createElement('div');
+            researchHeader.style.marginBottom = '2rem';
+            
+            const title = document.createElement('h2');
+            title.innerHTML = `<span class="section-icon">🔬</span>${research.title}`;
+            title.style.marginBottom = '1rem';
+            
+            const description = document.createElement('p');
+            description.textContent = research.description;
+            description.style.fontSize = '1.1rem';
+            description.style.marginBottom = '1rem';
+            
+            researchHeader.appendChild(title);
+            researchHeader.appendChild(description);
+            
+            // Add venue/source badge if available
+            if (research.venue || research.source) {
+                const venueBadge = document.createElement('div');
+                venueBadge.style.background = 'var(--fresh-green)';
+                venueBadge.style.color = 'var(--white)';
+                venueBadge.style.padding = '0.5rem 1rem';
+                venueBadge.style.borderRadius = '15px';
+                venueBadge.style.fontSize = '0.9rem';
+                venueBadge.style.display = 'inline-block';
+                venueBadge.style.marginBottom = '1rem';
+                venueBadge.style.fontWeight = '500';
+                venueBadge.textContent = research.venue || research.source;
+                researchHeader.appendChild(venueBadge);
+            }
+            
+            // Add "Own research" badge if specified
+            if (research.ownResearch) {
+                const ownResearchBadge = document.createElement('div');
+                ownResearchBadge.style.background = 'var(--blue)';
+                ownResearchBadge.style.color = 'var(--white)';
+                ownResearchBadge.style.padding = '0.5rem 1rem';
+                ownResearchBadge.style.borderRadius = '15px';
+                ownResearchBadge.style.fontSize = '0.9rem';
+                ownResearchBadge.style.display = 'inline-block';
+                ownResearchBadge.style.marginBottom = '1rem';
+                ownResearchBadge.style.fontWeight = '500';
+                ownResearchBadge.style.marginLeft = '0.5rem';
+                ownResearchBadge.textContent = 'Own Research';
+                researchHeader.appendChild(ownResearchBadge);
+            }
+            
+            // Add metadata badges
+            if (research.level || research.readingTime || research.featured || (research.tags && research.tags.length > 0)) {
+                const metadata = document.createElement('div');
+                metadata.style.display = 'flex';
+                metadata.style.flexWrap = 'wrap';
+                metadata.style.gap = '0.5rem';
+                metadata.style.marginBottom = '2rem';
+                
+                if (research.level) {
+                    const levelBadge = document.createElement('span');
+                    levelBadge.textContent = `Level: ${research.level}`;
+                    levelBadge.style.background = '#e5e7eb';
+                    levelBadge.style.color = '#374151';
+                    levelBadge.style.padding = '0.5rem 1rem';
+                    levelBadge.style.borderRadius = '15px';
+                    levelBadge.style.fontWeight = '500';
+                    levelBadge.style.fontSize = '0.9rem';
+                    metadata.appendChild(levelBadge);
+                }
+                
+                if (research.readingTime) {
+                    const timeBadge = document.createElement('span');
+                    timeBadge.textContent = `${research.readingTime} min read`;
+                    timeBadge.style.background = '#fef3c7';
+                    timeBadge.style.color = '#92400e';
+                    timeBadge.style.padding = '0.5rem 1rem';
+                    timeBadge.style.borderRadius = '15px';
+                    timeBadge.style.fontWeight = '500';
+                    timeBadge.style.fontSize = '0.9rem';
+                    metadata.appendChild(timeBadge);
+                }
+                
+                if (research.featured) {
+                    const featuredBadge = document.createElement('span');
+                    featuredBadge.textContent = '★ Featured Research';
+                    featuredBadge.style.background = '#fbbf24';
+                    featuredBadge.style.color = '#92400e';
+                    featuredBadge.style.padding = '0.5rem 1rem';
+                    featuredBadge.style.borderRadius = '15px';
+                    featuredBadge.style.fontWeight = 'bold';
+                    featuredBadge.style.fontSize = '0.9rem';
+                    metadata.appendChild(featuredBadge);
+                }
+                
+                if (research.tags && research.tags.length > 0) {
+                    research.tags.forEach(tag => {
+                        const tagBadge = document.createElement('span');
+                        tagBadge.textContent = tag;
+                        tagBadge.style.background = '#f3f4f6';
+                        tagBadge.style.color = '#6b7280';
+                        tagBadge.style.padding = '0.5rem 1rem';
+                        tagBadge.style.borderRadius = '15px';
+                        tagBadge.style.fontSize = '0.8rem';
+                        metadata.appendChild(tagBadge);
+                    });
+                }
+                
+                researchHeader.appendChild(metadata);
+            }
+            
+            researchSection.appendChild(researchHeader);
+            
+            // Research content placeholder
+            const contentPlaceholder = document.createElement('div');
+            contentPlaceholder.style.padding = '2rem';
+            contentPlaceholder.style.background = '#fefdf8';
+            contentPlaceholder.style.borderRadius = '10px';
+            contentPlaceholder.style.border = '2px dashed #fbbf24';
+            contentPlaceholder.style.textAlign = 'center';
+            contentPlaceholder.style.color = '#92400e';
+            
+            contentPlaceholder.innerHTML = `
+                <h3 style="color: var(--blue); margin-bottom: 1rem;">🔬 Research Content</h3>
+                <p style="margin-bottom: 1rem;">This is where the full research content, papers, and code implementations would be displayed.</p>
+                <p style="font-size: 0.9rem; opacity: 0.8;">In a full implementation, this would load from:</p>
+                <code style="background: #fef3c7; padding: 0.2rem 0.5rem; border-radius: 4px; color: #92400e;">${research.url || research.path}</code>
+                <br><br>
+                <p style="font-size: 0.9rem;"><strong>Research ID:</strong> ${research.id}</p>
+                ${research.lastUpdated ? `<p style="font-size: 0.9rem;"><strong>Last Updated:</strong> ${research.lastUpdated}</p>` : ''}
+            `;
+            
+            researchSection.appendChild(contentPlaceholder);
+            container.appendChild(researchSection);
+        }
+
+        // Function to generate navigation for research
+        function generateResearchNavigation(research, container) {
+            container.innerHTML = '';
+            
+            // Add a back button
+            const backSection = document.createElement('div');
+            backSection.className = 'nav-section';
+            
+            const backButton = document.createElement('a');
+            backButton.href = '#';
+            backButton.className = 'nav-item';
+            backButton.textContent = '← Back to Research';
+            backButton.style.fontWeight = 'bold';
+            backButton.style.color = 'var(--blue)';
+            backButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadResearchData();
+            });
+            
+            backSection.appendChild(backButton);
+            container.appendChild(backSection);
+            
+            // Research info section
+            const researchSection = document.createElement('div');
+            researchSection.className = 'nav-section';
+            
+            const sectionTitle = document.createElement('div');
+            sectionTitle.className = 'nav-section-title';
+            sectionTitle.textContent = 'Research Info';
+            researchSection.appendChild(sectionTitle);
+            
+            // Current research display
+            const currentResearch = document.createElement('div');
+            currentResearch.className = 'nav-item active';
+            currentResearch.style.cursor = 'default';
+            currentResearch.textContent = research.title;
+            
+            if (research.level || research.readingTime || research.featured) {
+                const metadata = document.createElement('div');
+                metadata.className = 'nav-item-metadata';
+                metadata.style.fontSize = '0.75rem';
+                metadata.style.color = '#9ca3af';
+                metadata.style.marginTop = '0.2rem';
+                metadata.style.opacity = '0.8';
+                
+                const metaParts = [];
+                if (research.level) metaParts.push(research.level);
+                if (research.readingTime) metaParts.push(`${research.readingTime}min`);
+                if (research.featured) metaParts.push('★');
+                
+                metadata.textContent = metaParts.join(' • ');
+                currentResearch.appendChild(metadata);
+            }
+            
+            researchSection.appendChild(currentResearch);
+            container.appendChild(researchSection);
+        }
+
+        // Function to load content from a specific folder
+        async function loadFolderContent(folderPath) {
+            try {
+                // Construct the meta.json path for the folder
+                const metaPath = `${folderPath}/meta.json`;
+                console.log('Loading folder content from:', metaPath);
+                
+                const response = await fetch(metaPath);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${metaPath}: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Update page title and description
+                document.querySelector('.content-header h1').textContent = data.title;
+                document.querySelector('.content-header p').textContent = data.description;
+                
+                // Update browser history and URL
+                const newUrl = `${window.location.pathname}?folder=${encodeURIComponent(folderPath)}`;
+                window.history.pushState({ folderPath }, data.title, newUrl);
+                
+                // Clear existing content
+                const sidebarNav = document.querySelector('.sidebar-nav');
+                const content = document.querySelector('.content');
+                
+                // Keep the header but remove existing sections
+                const existingSections = content.querySelectorAll('.research-section');
+                existingSections.forEach(section => section.remove());
+                
+                // Generate new content based on folder structure
+                if (data.items && data.items.length > 0) {
+                    // This is a leaf folder with items
+                    generateFolderContentDisplay(data, content);
+                    generateFolderNavigation(data, sidebarNav);
+                } else if (data.sections && data.sections.length > 0) {
+                    // This is a parent folder with sections
+                    generateSidebarNavigation(data.sections, sidebarNav);
+                    generateMainContent(data.sections, content);
+                }
+                
+                console.log('Loaded folder data:', data);
+                
+            } catch (error) {
+                console.error('Error loading folder content:', error);
+                // Show error message
+                const content = document.querySelector('.content');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.padding = '2rem';
+                errorDiv.style.textAlign = 'center';
+                errorDiv.style.color = '#ef4444';
+                errorDiv.innerHTML = `
+                    <h2>Error Loading Folder</h2>
+                    <p>Failed to load content from folder. Please check the console for details.</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <button onclick="loadResearchData()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--blue); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Back to Main Page
+                    </button>
+                `;
+                content.appendChild(errorDiv);
+            }
         }
 
         function getIconForSection(sectionId) {
@@ -615,9 +1265,36 @@
 
         // Load data when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            loadResearchData();
+            // Check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const folderPath = urlParams.get('folder');
+            const researchId = urlParams.get('research');
+            
+            if (folderPath) {
+                loadFolderContent(folderPath);
+            } else if (researchId) {
+                // Need to find the research data - for now, go back to main and let user navigate
+                console.log('Research ID found in URL:', researchId);
+                loadResearchData();
+            } else {
+                loadResearchData();
+            }
+            
             addNavigationHandlers();
         });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.folderPath) {
+                loadFolderContent(event.state.folderPath);
+            } else {
+                // Just go back to main research data since we navigate directly to HTML files now
+                loadResearchData();
+            }
+        });
     </script>
+    
+    <!-- Quantum 404 Handler -->
+    <script src="_404/quantum-404-handler.js"></script>
 </body>
 </html>

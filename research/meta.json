@@ -1,217 +1,173 @@
 {
   "title": "Research & Code Implementation",
   "description": "Explore cutting-edge quantum computing research papers with practical code implementations and performance analysis.",
+  "type": "root",
   "sections": [
     {
-      "id": "algorithm-papers",
-      "title": "Algorithm Papers",
-      "icon": "📚",
-      "items": [
+      "id": "own-research",
+      "title": "Own Research",
+      "icon": "👨‍🔬",
+      "type": "section",
+      "description": "Original research contributions from our team.",
+      "children": [
         {
-          "id": "optimization",
-          "title": "Quantum Optimization",
-          "description": "Research and implementations in quantum optimization algorithms including QAOA, VQE, and quantum annealing approaches.",
-          "papers": [
-            {
-              "title": "Quantum Approximate Optimization Algorithm for MaxCut",
-              "authors": "Farhi, E., Goldstone, J., Gutmann, S.",
-              "venue": "arXiv:1411.4028",
-              "description": "Implementation of QAOA for solving MaxCut problems on various graph topologies with performance benchmarks.",
-              "code": {
-                "language": "Qiskit",
-                "title": "QAOA Implementation",
-                "snippet": "# QAOA for MaxCut\nfrom qiskit import QuantumCircuit\nfrom qiskit.algorithms import QAOA\nfrom qiskit.algorithms.optimizers import COBYLA\n\ndef create_qaoa_circuit(graph, p):\n    # Implementation details...\n    return circuit"
-              },
-              "github_link": "#"
-            },
-            {
-              "title": "Variational Quantum Eigensolver for Molecular Systems",
-              "authors": "Peruzzo, A., et al.",
-              "venue": "Nature Communications",
-              "description": "VQE implementation for finding ground states of molecular Hamiltonians with error mitigation techniques.",
-              "code": {
-                "language": "PennyLane",
-                "title": "VQE Molecular Simulation",
-                "snippet": "# VQE for H2 molecule\nimport pennylane as qml\nfrom pennylane import numpy as np\n\ndef molecular_hamiltonian():\n    # Hamiltonian construction...\n    return H"
-              },
-              "github_link": "#"
-            },
-            {
-              "title": "Quantum Annealing for Portfolio Optimization",
-              "authors": "Rosenberg, G., et al.",
-              "venue": "IEEE Transactions on Selected Topics",
-              "description": "Portfolio optimization using quantum annealing with risk constraints and real market data validation.",
-              "code": {
-                "language": "D-Wave",
-                "title": "Portfolio QUBO Formulation",
-                "snippet": "# Portfolio optimization QUBO\nfrom dwave.system import DWaveSampler\nimport dimod\n\ndef portfolio_qubo(returns, risks):\n    # QUBO formulation...\n    return Q"
-              },
-              "github_link": "#"
-            }
-          ]
+          "id": "ml-disaster-prediction",
+          "title": "Machine Learning Models for Natural Disaster Prediction",
+          "type": "page",
+          "path": "research/own-research/ml-disaster-prediction.html",
+          "url": "research/own-research/ml-disaster-prediction.html",
+          "description": "Development of advanced machine learning models for predicting natural disasters using multi-modal data sources including satellite imagery, meteorological data, and historical patterns.",
+          "authors": ["CPrA Research Team"],
+          "venue": "In Preparation",
+          "category": "Machine Learning",
+          "framework": "TensorFlow, PyTorch",
+          "tags": ["machine-learning", "disaster-prediction", "deep-learning", "satellite-imagery"],
+          "featured": true,
+          "ownResearch": true,
+          "level": "Advanced",
+          "readingTime": 15,
+          "lastUpdated": "2025-01-30"
         },
         {
-          "id": "ml-papers",
-          "title": "Quantum Machine Learning",
-          "description": "Latest developments in quantum machine learning including quantum neural networks, kernel methods, and hybrid algorithms.",
-          "papers": [
-            {
-              "title": "Quantum Neural Networks for Classification",
-              "authors": "Benedetti, M., et al.",
-              "venue": "Quantum Science and Technology",
-              "description": "Parameterized quantum circuits for classification tasks with gradient-based optimization strategies.",
-              "code": {
-                "language": "TensorFlow Quantum",
-                "title": "Quantum Neural Network",
-                "snippet": "# QNN with TFQ\nimport tensorflow as tf\nimport tensorflow_quantum as tfq\n\ndef create_qnn_model():\n    # Quantum layer construction...\n    return model"
-              },
-              "github_link": "#"
-            },
-            {
-              "title": "Quantum Kernel Methods for Support Vector Machines",
-              "authors": "Havlíček, V., et al.",
-              "venue": "Nature",
-              "description": "Feature mapping to high-dimensional Hilbert spaces using quantum feature maps for enhanced classification.",
-              "code": {
-                "language": "Qiskit Machine Learning",
-                "title": "Quantum Kernel SVM",
-                "snippet": "# Quantum Kernel SVM\nfrom qiskit_machine_learning.kernels import QuantumKernel\n\ndef quantum_feature_map():\n    # Feature map circuit...\n    return feature_map"
-              },
-              "github_link": "#"
-            }
-          ]
-        },
-        {
-          "id": "cryptography",
-          "title": "Quantum Cryptography",
-          "description": "Quantum key distribution, post-quantum cryptography, and quantum security protocols.",
-          "papers": []
-        },
-        {
-          "id": "simulation",
-          "title": "Quantum Simulation",
-          "description": "Quantum simulation of physical systems, chemistry, and many-body problems.",
-          "papers": []
+          "id": "capra-tree",
+          "title": "CaPRA-Tree: A High-Performance Indexing B-Tree-type Structure for Next-Generation Database Systems",
+          "type": "page",
+          "path": "research/own-research/capra-tree.html",
+          "url": "research/own-research/capra-tree.html",
+          "description": "Novel B-Tree-type indexing structure designed for next-generation database systems, featuring improved cache performance and reduced I/O operations for large-scale data management.",
+          "authors": ["CPrA Research Team"],
+          "venue": "Under Review",
+          "category": "Database Systems",
+          "framework": "C++, Custom Implementation",
+          "tags": ["database", "indexing", "b-tree", "performance", "data-structures"],
+          "featured": true,
+          "ownResearch": true,
+          "level": "Expert",
+          "readingTime": 20,
+          "lastUpdated": "2025-01-28"
         }
       ]
     },
     {
-      "id": "code-implementations",
-      "title": "Code Implementations",
-      "icon": "💻",
-      "items": [
+      "id": "algorithms",
+      "title": "Algorithm Research",
+      "icon": "⚡",
+      "type": "folder",
+      "path": "research/algorithms",
+      "url": "research/algorithms.html",
+      "description": "Research papers focusing on quantum algorithm development and optimization.",
+      "children": [
         {
-          "id": "qiskit-impl",
-          "title": "Qiskit Projects",
-          "description": "Comprehensive Qiskit-based implementations of quantum algorithms with detailed documentation and tutorials.",
-          "papers": [
-            {
-              "title": "Grover's Search Algorithm Implementation",
-              "authors": "Complete Qiskit Tutorial",
-              "venue": "Educational Resource",
-              "description": "Step-by-step implementation of Grover's algorithm with amplitude amplification and oracle construction.",
-              "code": {
-                "language": "Qiskit",
-                "title": "Grover's Algorithm",
-                "snippet": "# Grover's Search\nfrom qiskit import QuantumCircuit, ClassicalRegister\nfrom qiskit.circuit.library import GroverOperator\n\ndef grovers_search(marked_items, n_qubits):\n    # Oracle and diffusion operators...\n    return circuit"
-              },
-              "github_link": "#"
-            },
-            {
-              "title": "Quantum Fourier Transform and Shor's Algorithm",
-              "authors": "Number Theory Applications",
-              "venue": "Cryptography Research",
-              "description": "Implementation of QFT and its application in Shor's factoring algorithm with period-finding subroutines.",
-              "code": {
-                "language": "Qiskit",
-                "title": "Shor's Algorithm",
-                "snippet": "# Shor's Factoring\nfrom qiskit.algorithms import Shor\nfrom qiskit.utils import QuantumInstance\n\ndef shors_factoring(N):\n    # Period finding implementation...\n    return factors"
-              },
-              "github_link": "#"
-            }
-          ]
+          "id": "qaoa-maxcut",
+          "title": "QAOA for MaxCut Problems",
+          "type": "page",
+          "path": "research/algorithms/qaoa-maxcut.html",
+          "url": "research/algorithms/qaoa-maxcut.html",
+          "description": "Implementation of QAOA for solving MaxCut problems on various graph topologies with performance benchmarks.",
+          "authors": ["Farhi, E.", "Goldstone, J.", "Gutmann, S."],
+          "venue": "arXiv:1411.4028",
+          "category": "Optimization",
+          "framework": "Qiskit",
+          "tags": ["qaoa", "maxcut", "optimization", "graph-theory"],
+          "featured": ["code", "math"],
+          "lastUpdated": "2025-01-20"
         },
         {
-          "id": "cirq-impl",
-          "title": "Cirq Implementations",
-          "description": "Google Cirq framework implementations for quantum algorithms and simulations.",
-          "papers": []
-        },
-        {
-          "id": "pennylane-impl",
-          "title": "PennyLane Code",
-          "description": "Differential quantum programming with PennyLane for quantum machine learning.",
-          "papers": []
-        },
-        {
-          "id": "custom-impl",
-          "title": "Custom Implementations",
-          "description": "Custom quantum computing implementations from scratch using various programming languages.",
-          "papers": []
+          "id": "vqe-molecular",
+          "title": "VQE for Molecular Systems",
+          "type": "page",
+          "path": "research/algorithms/vqe-molecular.html",
+          "url": "research/algorithms/vqe-molecular.html",
+          "description": "VQE implementation for finding ground states of molecular Hamiltonians with error mitigation techniques.",
+          "authors": ["Peruzzo, A.", "et al."],
+          "venue": "Nature Communications",
+          "category": "Chemistry",
+          "framework": "PennyLane",
+          "tags": ["vqe", "chemistry", "molecular", "ground-state"],
+          "featured": ["code", "results"],
+          "lastUpdated": "2025-01-18"
         }
       ]
     },
     {
-      "id": "hardware-research",
-      "title": "Hardware Research",
-      "icon": "🔧",
-      "items": [
+      "id": "machine-learning",
+      "title": "Quantum Machine Learning",
+      "icon": "🤖",
+      "type": "folder",
+      "path": "research/machine-learning",
+      "url": "research/machine-learning.html",
+      "description": "Research at the intersection of quantum computing and machine learning.",
+      "children": [
         {
-          "id": "superconducting",
-          "title": "Superconducting Qubits",
-          "description": "Research on superconducting quantum processors and coherence optimization.",
-          "papers": []
-        },
-        {
-          "id": "trapped-ions",
-          "title": "Trapped Ion Systems",
-          "description": "Ion trap quantum computing platforms and gate implementations.",
-          "papers": []
-        },
-        {
-          "id": "photonic",
-          "title": "Photonic Quantum",
-          "description": "Photonic quantum computing and linear optical quantum computation.",
-          "papers": []
-        },
-        {
-          "id": "error-mitigation",
-          "title": "Error Mitigation",
-          "description": "Quantum error mitigation techniques for near-term quantum devices.",
-          "papers": []
+          "id": "qnn-classification",
+          "title": "Quantum Neural Networks for Classification",
+          "type": "page",
+          "path": "research/machine-learning/qnn-classification.html",
+          "url": "research/machine-learning/qnn-classification.html",
+          "description": "Implementing quantum neural networks for classical data classification tasks.",
+          "authors": ["Schuld, M.", "Killoran, N."],
+          "venue": "Physical Review A",
+          "category": "Machine Learning",
+          "framework": "PennyLane",
+          "tags": ["qnn", "classification", "machine-learning"],
+          "featured": ["code", "interactive"],
+          "lastUpdated": "2025-01-15"
         }
       ]
     },
     {
-      "id": "benchmarks",
-      "title": "Benchmarks",
-      "icon": "📊",
-      "items": [
+      "id": "cryptography",
+      "title": "Quantum Cryptography",
+      "icon": "🔐",
+      "type": "folder",
+      "path": "research/cryptography",
+      "url": "research/cryptography.html",
+      "description": "Research in quantum cryptography and post-quantum security.",
+      "children": [
         {
-          "id": "performance",
-          "title": "Performance Analysis",
-          "description": "Quantum algorithm performance benchmarks and complexity analysis.",
-          "papers": []
-        },
+          "id": "bb84-protocol",
+          "title": "BB84 Quantum Key Distribution",
+          "type": "page",
+          "path": "research/cryptography/bb84-protocol.html",
+          "url": "research/cryptography/bb84-protocol.html",
+          "description": "Implementation and security analysis of the BB84 quantum key distribution protocol.",
+          "authors": ["Bennett, C.", "Brassard, G."],
+          "venue": "IEEE International Conference",
+          "category": "Cryptography",
+          "framework": "Qiskit",
+          "tags": ["bb84", "qkd", "cryptography", "security"],
+          "featured": ["code", "interactive"],
+          "lastUpdated": "2025-01-12"
+        }
+      ]
+    },
+    {
+      "id": "quantum-algorithms-research",
+      "title": "Quantum Algorithms Research",
+      "icon": "⚡",
+      "type": "section",
+      "description": "Comprehensive research collection on quantum algorithms and their implementations.",
+      "children": [
         {
-          "id": "comparison",
-          "title": "Algorithm Comparison",
-          "description": "Comparative studies of quantum algorithms across different platforms.",
-          "papers": []
-        },
-        {
-          "id": "scaling",
-          "title": "Scaling Studies",
-          "description": "Quantum advantage scaling with system size and noise levels.",
-          "papers": []
-        },
-        {
-          "id": "metrics",
-          "title": "Quantum Metrics",
-          "description": "Quantum computing performance metrics and benchmarking standards.",
-          "papers": []
+          "id": "quantum-algorithms-folder",
+          "title": "Quantum Algorithms Collection",
+          "type": "folder",
+          "path": "research/quantum-algorithms",
+          "url": "research/quantum-algorithms.html",
+          "description": "Comprehensive research collection on quantum algorithms, from theoretical foundations to practical implementations.",
+          "category": "Algorithm Research",
+          "tags": ["algorithms", "implementation", "theory", "applications"],
+          "featured": true,
+          "level": "Intermediate",
+          "lastUpdated": "2025-08-01"
         }
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "lastUpdated": "2025-01-31",
+    "version": "2.0",
+    "totalPapers": 6,
+    "structure": "hierarchical"
+  }
 }

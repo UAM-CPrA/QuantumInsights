@@ -1,0 +1,94 @@
+{
+  "title": "Grover's Search Algorithm",
+  "description": "Comprehensive exploration of Grover's quantum search algorithm, from basic principles to advanced applications.",
+  "type": "folder",
+  "parentPath": "concepts/algorithms",
+  "items": [
+    {
+      "id": "introduction-to-grover",
+      "title": "Introduction to Grover",
+      "type": "page",
+      "path": "concepts/algorithms/grover/introduction-to-grover.html",
+      "url": "concepts/algorithms/grover/introduction-to-grover.html",
+      "description": "Learn the fundamental principles of Grover's quantum search algorithm and how it achieves quadratic speedup over classical search.",
+      "level": "Intermediate",
+      "readingTime": 25,
+      "tags": ["grover", "search", "quantum-algorithms", "basics"],
+      "featured": ["math", "interactive", "video"],
+      "lastUpdated": "2025-08-01",
+      "concepts": [
+        {
+          "title": "Quantum Search Problem",
+          "description": "Understanding the unstructured search problem and why classical algorithms require O(N) time.",
+          "mathematical_foundation": "Search space of N items, finding marked items with probability 1",
+          "applications": ["Database search", "Optimization problems", "Cryptography"]
+        },
+        {
+          "title": "Oracle Function",
+          "description": "Learn how to construct quantum oracles that mark target items in the search space.",
+          "mathematical_foundation": "O|x⟩ = (-1)^f(x)|x⟩ where f(x) = 1 for marked items",
+          "applications": ["Problem encoding", "Boolean satisfiability", "Graph algorithms"]
+        },
+        {
+          "title": "Amplitude Amplification",
+          "description": "The core mechanism that amplifies the probability amplitude of marked states.",
+          "mathematical_foundation": "Geometric rotation in 2D amplitude space",
+          "applications": ["Quantum search", "Monte Carlo methods", "Quantum walks"]
+        },
+        {
+          "title": "Quadratic Speedup",
+          "description": "Why Grover's algorithm achieves O(√N) complexity instead of classical O(N).",
+          "mathematical_foundation": "Optimal number of iterations: π√(N/m)/4",
+          "applications": ["Complexity analysis", "Resource estimation", "Algorithm comparison"]
+        }
+      ]
+    },
+    {
+      "id": "quantum-counting-algorithm",
+      "title": "Quantum Counting Algorithm",
+      "type": "page",
+      "path": "concepts/algorithms/grover/quantum-counting-algorithm.html",
+      "url": "concepts/algorithms/grover/quantum-counting-algorithm.html",
+      "description": "Explore the quantum counting algorithm that determines the number of marked items without knowing them beforehand, extending Grover's search capabilities.",
+      "level": "Advanced",
+      "readingTime": 35,
+      "tags": ["quantum-counting", "grover", "quantum-phase-estimation", "advanced"],
+      "featured": ["math", "code", "results"],
+      "lastUpdated": "2025-08-01",
+      "concepts": [
+        {
+          "title": "Quantum Phase Estimation",
+          "description": "Using quantum phase estimation to extract eigenvalue information from Grover's diffusion operator.",
+          "mathematical_foundation": "QPE extracts eigenvalues e^(iθ) from unitary operators",
+          "applications": ["Eigenvalue problems", "Quantum simulation", "Algorithm analysis"]
+        },
+        {
+          "title": "Grover Eigenvalues",
+          "description": "Understanding the eigenvalue structure of Grover's iteration operator.",
+          "mathematical_foundation": "Eigenvalues: e^(±iθ) where θ = 2sin⁻¹(√(m/N))",
+          "applications": ["Algorithm analysis", "Counting problems", "Complexity theory"]
+        },
+        {
+          "title": "Counting Without Knowing",
+          "description": "Determining the number of solutions without prior knowledge of their identity.",
+          "mathematical_foundation": "m = N sin²(θ/2) derived from phase estimation",
+          "applications": ["Database analysis", "Combinatorial problems", "Optimization"]
+        },
+        {
+          "title": "Error Analysis",
+          "description": "Precision and error bounds in quantum counting algorithms.",
+          "mathematical_foundation": "Error scales as O(1/2^k) for k-bit phase estimation",
+          "applications": ["Algorithm reliability", "Resource optimization", "Practical implementations"]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2025-08-01",
+    "version": "1.0",
+    "totalArticles": 2,
+    "structure": "folder",
+    "difficulty": "Intermediate to Advanced",
+    "estimatedTime": "60 minutes"
+  }
+}
