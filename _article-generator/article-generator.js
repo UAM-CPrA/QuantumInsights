@@ -974,7 +974,7 @@ class TemplateGenerator {
             <a href="../index.html" class="logo">
                 <img src="${faviconPath}" alt="CPrA Logo" class="nav-logo-icon">
                 <div class="logo-text">
-                    <span class="logo-title">Quantum Insights</span>
+                    <span class="logo-title">QuantumInsights</span>
                     <span class="logo-subtitle">By CPrA</span>
                 </div>
             </a>
@@ -1078,7 +1078,7 @@ class TemplateGenerator {
             <a href="../index.html" class="logo">
                 <img src="${faviconPath}" alt="CPrA Logo" class="nav-logo-icon">
                 <div class="logo-text">
-                    <span class="logo-title">Quantum Insights</span>
+                    <span class="logo-title">QuantumInsights</span>
                     <span class="logo-subtitle">By CPrA</span>
                 </div>
             </a>
