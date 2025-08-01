@@ -1,4 +1,4 @@
-# QuantumInsights 🚀
+# CPrA QuantumInsights
 
 A comprehensive platform for quantum computing education and research, featuring interactive concepts, research papers, and an advanced article generator.
 
